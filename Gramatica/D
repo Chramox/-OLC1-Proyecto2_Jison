@@ -1,0 +1,84 @@
+%lex
+
+%%
+%options case-sensitive
+\s+											// se ignoran espacios en blanco
+"//".*										// comentario simple línea
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]			// comentario multiple líneas
+
+//PALABRAS RESERVADAS
+
+//TIPOS DE DATOS
+"int"                               return 'INT';
+"char"                              return 'CHAR';
+"String"                            return 'STRING';
+"double"                            return 'DOUBLE';
+"boolean"                           return 'BOOLEAN';
+
+//RESERVADAS DE JAVA
+"class"                             return 'CLASS';
+"import"                            return 'IMPORT';
+"continue"                          return 'CONTINUE';
+"void"                              return 'VOID';
+"return"                            return 'RETURN';
+"main"                              return 'MAIN';
+"true"                              return 'true';
+"false"                             return 'false';
+//SENTENCIA DE OPERACIONES
+"if"                                return 'IF';
+"else"                              return 'ELSE';
+"while"                             return 'WHILE';
+"do"                                return 'DO';
+"for"                               return 'FOR';
+"switch"                            return 'SWITCH';
+"case"				                return 'CASE';
+"default"			                return 'DEFAULT';
+"break"                             return 'BREAK';
+"System.out.println"                return "IMPRIMIR";
+"System.out.print"                  return "IMPRIMIR";
+//SIMBOLOS
+// SIMBOLOS ESPECIALES
+"{"                                 return 'LLAVE_APERTURA';     
+"}"                                 return 'LLAVE_CIERRE';       
+":"                                 return 'DOS_PUNTOS';         
+"="                                 return 'SIGNO_IGUAL';       
+"!"                                 return 'ADMIRACION_CIERR';
+"("                                 return 'PARENTESIS_APERTURA';
+")"                                 return 'PARENTESIS_CIERRE';      
+","                                 return 'COMA';               
+"."                                 return 'PUNTO';              
+";"                                 return 'PUNTO_COMA';         
+"\"                                 return 'DIAGONAL_INVERSO';    
+// OPERADORES
+"+"                                 return 'MAS';
+"-"                                 return 'GUION';  
+"/"                                 return 'DIAGONAL';      
+"*"                                 return 'ASTERISCO'; 
+"_"                                 return 'GUION_BAJO';
+"^"                                 return 'POTENCIA';
+"%"                                 return 'MODULO';
+// OPERADORES DOBLES  
+"=="                                return 'DOBLE_IGUAL';        
+">="                                return 'MAYOR_IGUAL';        
+"<="                                return 'MENOR_IGUAL';        
+"!="                                return 'DIFERENTEA';         
+"++"                                return 'INCREMENTO1';        
+"--"                                return 'DECREMENTO1';        
+"+="                                return 'SUMA_IGUAL';         
+"-="                                return 'RESTA_IGUAL';        
+"||"                                return 'DOBLE_OR';           
+"&&"                                return 'DOBLE_AND';          
+// OPERADORES MAYOR Y MENOR 
+">"                                 return 'MAYOR';             
+"<"                                 return 'MENOR';      
+
+
+\"[^\"]*\"              { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
+\'[^\']*\'              { yytext = yytext.substr(1,yyleng-2); return 'CADENA_SIMPLE'; }
+[0-9]+("."[0-9]+)?\b    return 'DECIMAL';
+[0-9]+\b                return 'ENTERO';
+([a-zA-Z])[a-zA-Z0-9_]* return 'IDENTIFICADOR';
+
+<<EOF>>                return 'EOF';
+.                    { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
+/lex

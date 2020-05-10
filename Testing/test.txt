@@ -1,0 +1,8 @@
+
+
+int hola;
+hola = 4 + 10;
+hola = 2;
+void main(){ while(a == 5){
+    hola = 4 + 5*8;
+} }
