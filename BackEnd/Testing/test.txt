@@ -1,8 +1,19 @@
+import hola;
+class Principal{
+    void main(){
+        import hola;
+        while(a == 5){
+        hola = 4 + 5*8;
+        
+        int hola;
+            if(hola == 5){
+                int expresion;
+            }
 
+        } 
+        while(a == 3){
+            int hola;
+        }
+}
+}
 
-int hola;
-hola = 4 + 10;
-hola = 2;
-void main(){ while(a == 5){
-    hola = 4 + 5*8;
-} }

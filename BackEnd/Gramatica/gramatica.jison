@@ -129,15 +129,21 @@ InstruccionesMetodo_Funciones
 */
 Instruccion_OutsideClass
     : Import Class
-    | FuncionMetodo
-    | Instruccion_Functions
+    | Class
     | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+   // | error TokEnd{ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 Instruccion_InsideClass
     : Declaracion
     | FuncionMetodo
     | Clase
     | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+ //   | error TokEnd{ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+;
+TokEnd
+    : LLAVE_CIERRE
+    | PUNTO_COMA
+    | PARENTESIS_CIERRE
 ;
 Instruccion_Functions
     : Declaracion	
@@ -153,6 +159,7 @@ Instruccion_Functions
     | CONTINUE PUNTO_COMA
     | Return
     | LlamarFuncion PUNTO_COMA
+    | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 /*DECLARACIONES*/
 

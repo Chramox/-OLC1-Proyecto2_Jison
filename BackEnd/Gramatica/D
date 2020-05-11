@@ -1,12 +1,16 @@
+/*HACIENDO ANALISIS LEXICO Y SINTACTICO CON JISON*/
+
+/* Definición Léxica */
 %lex
 
-%%
+
 %options case-sensitive
+%%
 \s+											// se ignoran espacios en blanco
 "//".*										// comentario simple línea
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]			// comentario multiple líneas
 
-//PALABRAS RESERVADAS
+// PALABRAS RESERVADAS
 
 //TIPOS DE DATOS
 "int"                               return 'INT';
@@ -15,16 +19,46 @@
 "double"                            return 'DOUBLE';
 "boolean"                           return 'BOOLEAN';
 
+";"                                 return 'PUNTO_COMA';   
+","                                 return 'COMA';      
+":"                                 return 'DOS_PUNTOS';  
+
+"++"                                return 'INCREMENTO';        
+"--"                                return 'DECREMENTO'; 
+//OPERADORES
+ 
+">="                                return 'MAYOR_IGUAL';        
+"<="                                return 'MENOR_IGUAL';
+">"                                 return 'MAYOR';             
+"<"                                 return 'MENOR'; 
+"!="                                return 'DIFERENTEA';   
+"=="                                return 'DOBLE_IGUAL';   
+"!"                                 return 'NOT';
+"="                                 return 'IGUAL';   
+"||"                                return 'OR';           
+"&&"                                return 'AND';     
+// OPERADORES
+"+"                                 return 'SUMA';
+"-"                                 return 'RESTA';  
+"/"                                 return 'DIVISION';      
+"*"                                 return 'MULTIPLICACION';
+"^"                                 return 'POTENCIA';
+"%"                                 return 'MODULO';
+
+"("                                 return 'PARENTESIS_APERTURA';
+")"                                 return 'PARENTESIS_CIERRE'; 
+"{"                                 return 'LLAVE_APERTURA';     
+"}"                                 return 'LLAVE_CIERRE';
 //RESERVADAS DE JAVA
+"true"                              return 'TRUE';
+"false"                             return 'FALSE';
 "class"                             return 'CLASS';
 "import"                            return 'IMPORT';
 "continue"                          return 'CONTINUE';
 "void"                              return 'VOID';
 "return"                            return 'RETURN';
 "main"                              return 'MAIN';
-"true"                              return 'true';
-"false"                             return 'false';
-//SENTENCIA DE OPERACIONES
+
 "if"                                return 'IF';
 "else"                              return 'ELSE';
 "while"                             return 'WHILE';
@@ -36,49 +70,212 @@
 "break"                             return 'BREAK';
 "System.out.println"                return "IMPRIMIR";
 "System.out.print"                  return "IMPRIMIR";
-//SIMBOLOS
-// SIMBOLOS ESPECIALES
-"{"                                 return 'LLAVE_APERTURA';     
-"}"                                 return 'LLAVE_CIERRE';       
-":"                                 return 'DOS_PUNTOS';         
-"="                                 return 'SIGNO_IGUAL';       
-"!"                                 return 'ADMIRACION_CIERR';
-"("                                 return 'PARENTESIS_APERTURA';
-")"                                 return 'PARENTESIS_CIERRE';      
-","                                 return 'COMA';               
-"."                                 return 'PUNTO';              
-";"                                 return 'PUNTO_COMA';         
-"\"                                 return 'DIAGONAL_INVERSO';    
-// OPERADORES
-"+"                                 return 'MAS';
-"-"                                 return 'GUION';  
-"/"                                 return 'DIAGONAL';      
-"*"                                 return 'ASTERISCO'; 
-"_"                                 return 'GUION_BAJO';
-"^"                                 return 'POTENCIA';
-"%"                                 return 'MODULO';
-// OPERADORES DOBLES  
-"=="                                return 'DOBLE_IGUAL';        
-">="                                return 'MAYOR_IGUAL';        
-"<="                                return 'MENOR_IGUAL';        
-"!="                                return 'DIFERENTEA';         
-"++"                                return 'INCREMENTO1';        
-"--"                                return 'DECREMENTO1';        
-"+="                                return 'SUMA_IGUAL';         
-"-="                                return 'RESTA_IGUAL';        
-"||"                                return 'DOBLE_OR';           
-"&&"                                return 'DOBLE_AND';          
-// OPERADORES MAYOR Y MENOR 
-">"                                 return 'MAYOR';             
-"<"                                 return 'MENOR';      
-
 
 \"[^\"]*\"              { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
-\'[^\']*\'              { yytext = yytext.substr(1,yyleng-2); return 'CADENA_SIMPLE'; }
+\'[^\']*\'              { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
 [0-9]+("."[0-9]+)?\b    return 'DECIMAL';
 [0-9]+\b                return 'ENTERO';
-([a-zA-Z])[a-zA-Z0-9_]* return 'IDENTIFICADOR';
+([a-zA-Z_])[a-zA-Z0-9_]* return 'IDENTIFICADOR';
 
 <<EOF>>                return 'EOF';
 .                    { console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
 /lex
+/*
+*   ANALISIS SINTACTICO  
+*/
+
+/* Asociación de operadores y precedencia */
+%left 'AND' 'OR'
+%left 'DOBLE_IGUAL' 'DIFERENTEA'
+%left 'MENOR' 'MENOR_IGUAL' 'MAYOR' 'MAYOR_IGUAL'
+%left 'SUMA' 'RESTA'
+%left 'MULTIPLICACION' 'DIVISION'
+%left 'POTENCIA' 'MODULO'
+%left UMENOS
+%right 'NOT'
+%right 'INCREMENTO' 'DECREMENTO'
+// TODO: CAMBIAR ACCESO PARA AFUERA, DENTRO DE CLASE, AHORITA NO ESTAN, ESTAMOS PROBANDO ARBOL
+
+/* Asociación de operadores y precedencia */
+%start ini
+
+%% /* Definición de la gramática */
+
+ini
+	:InstruccionesFueraClase EOF{
+		// cuado se haya reconocido la entrada completa retornamos el AST
+		return $1;
+	}
+;
+InstruccionesFueraClase
+    : InstruccionesFueraClase Instruccion_OutsideClass 
+    | Instruccion_OutsideClass 
+;
+InstruccionesDentroClase
+    : InstruccionesDentroClase Instruccion_InsideClass
+    | Instruccion_InsideClass   
+;
+InstruccionesMetodo_Funciones
+    : InstruccionesMetodo_Funciones Instruccion_Functions 
+    | Instruccion_Functions 
+;
+/*
+    INTRUCCIONES SEPARADAS 
+*/
+Instruccion_OutsideClass
+    : Import Class
+    | FuncionMetodo
+    | Instruccion_Functions
+;
+Instruccion_InsideClass
+    : Declaracion
+    | FuncionMetodo
+    | Clase
+;
+TokEnd
+    : LLAVE_CIERRE
+    | PUNTO_COMA
+    | PARENTESIS_CIERRE
+;
+Instruccion_Functions
+    : Declaracion	
+    | Asignacion
+    | If		
+    | For
+    | While	
+    | Do
+    | Switch
+    | Imprimir
+    | Class
+    | BREAK PUNTO_COMA
+    | CONTINUE PUNTO_COMA
+    | Return
+    | LlamarFuncion PUNTO_COMA
+;
+/*DECLARACIONES*/
+
+Declaracion
+    :Tipo_Dato Declaracion1 PUNTO_COMA 
+;
+Declaracion1
+    : Declaracion1 COMA Declaracion2
+    | Declaracion2
+;
+Declaracion2
+    : IDENTIFICADOR IGUAL Expresion 
+    | IDENTIFICADOR 
+;
+Asignacion 
+	: IDENTIFICADOR IGUAL Expresion PUNTO_COMA 
+    | Aumento PUNTO_COMA
+;
+Aumento
+    : IDENTIFICADOR INCREMENTO
+    | IDENTIFICADOR DECREMENTO
+;
+Tipo_Dato
+    :INT    
+    |CHAR
+    |DOUBLE
+    |BOOLEAN
+    |STRING
+;
+Expresion 
+    : RESTA Expresion %prec UMENOS
+    | NOT Expresion
+    | Expresion SUMA Expresion 
+    | Expresion RESTA Expresion 
+    | Expresion MULTIPLICACION Expresion
+    | Expresion DIVISION Expresion 
+    | Expresion MODULO Expresion
+    | Expresion POTENCIA Expresion 
+    | Expresion AND Expresion
+    | Expresion OR Expresion 
+    | Expresion DOBLE_IGUAL Expresion
+    | Expresion DIFERENTEA Expresion 
+    | Expresion MENOR_IGUAL Expresion
+    | Expresion MENOR Expresion 
+    | Expresion MAYOR_IGUAL Expresion 
+    | Expresion MAYOR Expresion 
+    | DECIMAL 
+    | NUMERO 
+    | TRUE   
+    | FALSE
+    | CADENA
+    | CARACTER 
+    | IDENTIFICADOR 
+    | LlamarFuncion  
+    | PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE
+;
+If 
+    :IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE OptionalElse
+;
+OptionalElse
+    : %empty /* empty */
+    | ELSE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE
+    | ELSE IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE OptionalElse
+;
+Switch
+    : SWITCH PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA Lista_Case LLAVE_CIERRE
+;
+Lista_Case
+    : Lista_Case Case
+    | Case
+;
+Case
+    : CASE Expresion DOS_PUNTOS InstruccionesMetodo_Funciones BREAK PUNTO_COMA
+    | DEFAULT DOS_PUNTOS InstruccionesMetodo_Funciones
+;
+Do
+    : DO LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA
+;
+While
+    :WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE 
+;
+FuncionMetodo
+    : Tipo_Dato IDENTIFICADOR PARENTESIS_APERTURA FuncionPrima LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE 
+    | VOID IDENTIFICADOR PARENTESIS_APERTURA FuncionPrima LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE 
+    | VOID MAIN PARENTESIS_APERTURA PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE 
+     
+;
+FuncionPrima
+    :Parametros PARENTESIS_CIERRE
+    |PARENTESIS_CIERRE
+;
+Parametros
+    :Parametros COMA Tipo_Dato IDENTIFICADOR
+    | Tipo_Dato IDENTIFICADOR
+;
+Imprimir
+    : IMPRIMIR PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA
+;
+For
+    :FOR PARENTESIS_APERTURA Declaracion Expresion PUNTO_COMA ListaAumentoFor PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE
+    |FOR PARENTESIS_APERTURA Declaracion1 PUNTO_COMA Expresion PUNTO_COMA ListaAumentoFor PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE
+;
+ListaAumentoFor
+    : ListaAumentoFor COMA Aumento
+    | Aumento
+;
+Class
+    : CLASS IDENTIFICADOR LLAVE_APERTURA InstruccionesDentroClase LLAVE_CIERRE 
+;
+Import
+    : Import IMPORT IDENTIFICADOR PUNTO_COMA 
+    | IMPORT IDENTIFICADOR PUNTO_COMA 
+;
+LlamarFuncion
+    : IDENTIFICADOR PARENTESIS_APERTURA Lista_Exp
+;
+Lista_Exp
+    : Expresiones PARENTESIS_CIERRE
+    | PARENTESIS_CIERRE
+;
+Expresiones
+    : Expresiones COMA Expresion
+    | Expresion
+;
+Return
+    : RETURN Expresion PUNTO_COMA
+    | RETURN PUNTO_COMA
+;
