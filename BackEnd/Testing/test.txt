@@ -1,7 +1,6 @@
 import hola;
 class Principal{
     void main(){
-        import hola;
         while(a == 5){
         hola = 4 + 5*8;
         

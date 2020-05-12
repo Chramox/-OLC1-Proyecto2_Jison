@@ -113,16 +113,21 @@ ini
 	}
 ;
 InstruccionesFueraClase
-    : InstruccionesFueraClase Instruccion_OutsideClass { $1.push($2); $$ = $1; }
-    | Instruccion_OutsideClass { $$ = [$1]; }
+    : InstruccionesFueraClase Instruccion_OutsideClass 
+    | Instruccion_OutsideClass 
 ;
 InstruccionesDentroClase
-    : InstruccionesDentroClase Instruccion_InsideClass { $1.push($2); $$ = $1; }
-    | Instruccion_InsideClass   { $$ = [$1]; }
+    : InstruccionesDentroClase Instruccion_InsideClass
+    | Instruccion_InsideClass
 ;
-InstruccionesMetodo_Funciones
-    : InstruccionesMetodo_Funciones Instruccion_Functions { $1.push($2); $$ = $1; }
-    | Instruccion_Functions { $$ = [$1]; }
+
+BLOQUE_INS
+    : LLAVE_APERTURA BLOQUE_INS_PRIMA LLAVE_CIERRE
+    | LLAVE_APERTURA LLAVE_CIERRE
+;   
+BLOQUE_INS_PRIMA
+    : BLOQUE_INS_PRIMA Instruccion_Functions
+    | Instruccion_Functions
 ;
 /*
     INTRUCCIONES SEPARADAS 
@@ -140,11 +145,7 @@ Instruccion_InsideClass
     | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
  //   | error TokEnd{ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
-TokEnd
-    : LLAVE_CIERRE
-    | PUNTO_COMA
-    | PARENTESIS_CIERRE
-;
+
 Instruccion_Functions
     : Declaracion	
     | Asignacion
@@ -164,7 +165,7 @@ Instruccion_Functions
 /*DECLARACIONES*/
 
 Declaracion
-    :Tipo_Dato Declaracion1 PUNTO_COMA {$$ = instruccionesAPI.newDeclaration($1,$2); }
+    :Tipo_Dato Declaracion1 PUNTO_COMA 
 ;
 Declaracion1
     : Declaracion1 COMA Declaracion2
@@ -175,7 +176,7 @@ Declaracion2
     | IDENTIFICADOR 
 ;
 Asignacion 
-	: IDENTIFICADOR IGUAL Expresion PUNTO_COMA {$$ = instruccionesAPI.newAsignament($1,$3); }
+	: IDENTIFICADOR IGUAL Expresion PUNTO_COMA 
     | Aumento PUNTO_COMA
 ;
 Aumento
@@ -192,37 +193,37 @@ Tipo_Dato
 Expresion 
     : RESTA Expresion %prec UMENOS
     | NOT Expresion
-    | Expresion SUMA Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.SUMA); }
-    | Expresion RESTA Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.RESTA); }
-    | Expresion MULTIPLICACION Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.MULTIPLICACION); }
-    | Expresion DIVISION Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.DIVISION); }
+    | Expresion SUMA Expresion
+    | Expresion RESTA Expresion 
+    | Expresion MULTIPLICACION Expresion 
+    | Expresion DIVISION Expresion 
     | Expresion MODULO Expresion
-    | Expresion POTENCIA Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.POTENCIA); }
-    | Expresion AND Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.AND); }
-    | Expresion OR Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.OR); }
-    | Expresion DOBLE_IGUAL Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.DOBLE_IGUAL); } 
-    | Expresion DIFERENTEA Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.DIFERENTEA); }
-    | Expresion MENOR_IGUAL Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.MENOR_IGUAL); }
-    | Expresion MENOR Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.MENOR); }
-    | Expresion MAYOR_IGUAL Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.MAYOR_IGUAL); }
-    | Expresion MAYOR Expresion {$$ = instruccionesAPI.newBinaryOperation($1, $3, TIPO_OPERACION.MAYOR); }
-    | DECIMAL { $$ = instruccionesAPI.newValue($1, TIPO_VALOR.NUMERO); }
-    | NUMERO { $$ = instruccionesAPI.newValue(Number($1), TIPO_VALOR.NUMERO); }
-    | TRUE   { $$ = instruccionesAPI.newValue($1, TIPO_VALOR.TRUE); }
-    | FALSE { $$ = instruccionesAPI.newValue($1, TIPO_VALOR.FALSE); }
-    | CADENA { $$ = instruccionesAPI.newValue($1, TIPO_VALOR.CADENA); }
-    | CARACTER { $$ = instruccionesAPI.newValue($1, TIPO_VALOR.CARACTER); }
-    | IDENTIFICADOR { $$ = instruccionesAPI.newValue($1, TIPO_VALOR.IDENTIFICADOR); }
-    | LlamarFuncion  { $$ = instruccionesAPI.newValue($1, TIPO_VALOR.IDENTIFICADOR); }
+    | Expresion POTENCIA Expresion
+    | Expresion AND Expresion
+    | Expresion OR Expresion
+    | Expresion DOBLE_IGUAL Expresion
+    | Expresion DIFERENTEA Expresion
+    | Expresion MENOR_IGUAL Expresion
+    | Expresion MENOR Expresion
+    | Expresion MAYOR_IGUAL Expresion
+    | Expresion MAYOR Expresion 
+    | DECIMAL 
+    | NUMERO 
+    | TRUE   
+    | FALSE 
+    | CADENA 
+    | CARACTER 
+    | IDENTIFICADOR 
+    | LlamarFuncion  
     | PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE
 ;
 If 
-    :IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE OptionalElse
+    :IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS OptionalElse
 ;
 OptionalElse
     : %empty /* empty */
-    | ELSE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE
-    | ELSE IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE OptionalElse
+    | ELSE BLOQUE_INS
+    | ELSE IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS OptionalElse
 ;
 Switch
     : SWITCH PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA Lista_Case LLAVE_CIERRE
@@ -236,20 +237,16 @@ Case
     | DEFAULT DOS_PUNTOS InstruccionesMetodo_Funciones
 ;
 Do
-    : DO LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA
-        { $$ = instruccionesAPI.newDo_While($7, $3); }
+    : DO BLOQUE_INS WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA
 ;
 While
-    :WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE 
-        { $$ = instruccionesAPI.newWhile($3, $6); }
+    :WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS 
 ;
 FuncionMetodo
-    : Tipo_Dato IDENTIFICADOR PARENTESIS_APERTURA FuncionPrima LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE 
-        {$$ = instruccionesAPI.newFunction($1, $2, $6 ); }
-    | VOID IDENTIFICADOR PARENTESIS_APERTURA FuncionPrima LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE 
-        {$$ = instruccionesAPI.newFunction($1, $2, $6); }
-    | VOID MAIN PARENTESIS_APERTURA PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE 
-        {$$ = instruccionesAPI.newFunction($1, $2, $6 ); }
+    : Tipo_Dato IDENTIFICADOR PARENTESIS_APERTURA FuncionPrima BLOQUE_INS 
+    | VOID IDENTIFICADOR PARENTESIS_APERTURA FuncionPrima BLOQUE_INS 
+    | VOID MAIN PARENTESIS_APERTURA PARENTESIS_CIERRE BLOQUE_INS 
+
 ;
 FuncionPrima
     :Parametros PARENTESIS_CIERRE
@@ -263,19 +260,20 @@ Imprimir
     : IMPRIMIR PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA
 ;
 For
-    :FOR PARENTESIS_APERTURA Declaracion Expresion PUNTO_COMA ListaAumentoFor PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE
-    |FOR PARENTESIS_APERTURA Declaracion1 PUNTO_COMA Expresion PUNTO_COMA ListaAumentoFor PARENTESIS_CIERRE LLAVE_APERTURA InstruccionesMetodo_Funciones LLAVE_CIERRE
+    :FOR PARENTESIS_APERTURA Declaracion Expresion PUNTO_COMA ListaAumentoFor PARENTESIS_CIERRE BLOQUE_INS
+    |FOR PARENTESIS_APERTURA Declaracion1 PUNTO_COMA Expresion PUNTO_COMA ListaAumentoFor PARENTESIS_CIERRE BLOQUE_INS
 ;
 ListaAumentoFor
     : ListaAumentoFor COMA Aumento
     | Aumento
 ;
 Class
-    : CLASS IDENTIFICADOR LLAVE_APERTURA InstruccionesDentroClase LLAVE_CIERRE { $$ = instruccionesAPI.newClass($2, $4); }
+    : CLASS IDENTIFICADOR LLAVE_APERTURA InstruccionesDentroClase LLAVE_CIERRE
+    | CLASS IDENTIFICADOR LLAVE_APERTURA LLAVE_CIERRE
 ;
 Import
-    : Import IMPORT IDENTIFICADOR PUNTO_COMA { $$ = instruccionesAPI.newImport($3); }
-    | IMPORT IDENTIFICADOR PUNTO_COMA { $$ = instruccionesAPI.newImport($2); }
+    : Import IMPORT IDENTIFICADOR PUNTO_COMA
+    | IMPORT IDENTIFICADOR PUNTO_COMA
 ;
 LlamarFuncion
     : IDENTIFICADOR PARENTESIS_APERTURA Lista_Exp

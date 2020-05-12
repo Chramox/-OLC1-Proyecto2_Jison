@@ -7,10 +7,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cosmo/bootstrap.min.css" rel="stylesheet" integrity="sha384-qdQEsAI45WFCO5QwXBelBe1rR9Nwiss4rGEqiszC+9olH1ScrLrMQr1KmDR964uZ" crossorigin="anonymous">
+  <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/flatly/bootstrap.min.css" rel="stylesheet" integrity="sha384-yrfSO0DBjS56u5M+SjWTyAHujrkiYVtRYh2dtB3yLQtUz3bodOeialO59u5lUCFF" crossorigin="anonymous">
+  <!-- <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cosmo/bootstrap.min.css" rel="stylesheet" integrity="sha384-qdQEsAI45WFCO5QwXBelBe1rR9Nwiss4rGEqiszC+9olH1ScrLrMQr1KmDR964uZ" crossorigin="anonymous"> -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <style>
+    #editor {
+    /** Setting height is also important, otherwise editor wont showup**/
+      height: 500px;
+    }
+    #editor_secundario{
+    /** Setting height is also important, otherwise editor wont showup**/
+      height: 300px;
+    }
+  </style>
 </head>
 <body>
+  <!-- NAVBAR -->
     <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Proyecto 2</a>
@@ -42,40 +54,43 @@
                             <a class="dropdown-item" href="#">Reporte AST</a>
                         </div>
                       </li>
-                <li class="nav-item">
+                  <li class="nav-item">
                     <a class="nav-link" data-toggle="modal" data-target="#exampleModal">Acerca De</a>
                   </li>
                 </ul>
-                <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>
             </div>
         </nav>
     </div>
-    <div class="content">
-        <div class="row">
-            <!--Lista de ventanas-->
-            <div class="col-md-6">
-              <ul class="nav nav-tabs border-primary" id="myTabs">
-                <li class="nav-item">
-                  <a class="nav-link active" data-toggle="tab" href="#p1" onclick="changeTab('txt1')">Pestaña 1</a>
-                </li>
-              </ul>
-              <div id="myTabContent" class="tab-content">
-                <div class="tab-pane fade show active" id="p1">
-                    <pre id="editor">function foo(items) {
-                        var i;
-                        for (i = 0; i &lt; items.length; i++) {
-                            alert("Ace Rocks " + items[i]);
-                        }
-                    }</pre>
-                </div>
+    <!-- CUERPO DE LA INTERFAZ -->
+    <!-- EDITOR PRINCIPAL -->
+    <div class="row" style="padding: 30px;">
+      <div class="col-md-6">
+        <div class="card border-primary mb-3">
+          <div class="card-header"><h4 class="card-title">Editor Principal</h4></div>
+          <div class="card-body">
+            <div id="editor"></div>
+          </div>
+        </div>
+      </div>
+    <!-- TABS DE EDITORES SECUNDARIOS -->
+    <div class="col-md-6">
+      <div class="card border-success mb-3">
+        <div class="card-header"><h4 class="card-title">Copias</h4></div>
+          <div class="card-body">
+            <ul class="nav nav-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#home">Pestaña 1</a>
+              </li>
+            </ul>
+            <div id="tabContent" class="tab-content">
+              <div class="tab-pane fade active show" id="home">
+                <div id="editor_secundario"></div>
               </div>
-            </div>
+          </div>
+        </div>
+      </div>
     </div>
- 
-
+  </div>
 
 <!-- MODAL -->
 <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -107,7 +122,10 @@
       var editor = ace.edit("editor");
       editor.setTheme("ace/theme/tomorrow_night");
       editor.session.setMode("ace/mode/java");
-      
+
+      var editor = ace.edit("editor_secundario");
+      editor.setTheme("ace/theme/tomorrow_night");
+      editor.session.setMode("ace/mode/java");
   </script>
 </body>
 </html>
