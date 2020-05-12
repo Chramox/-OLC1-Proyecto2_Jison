@@ -89,20 +89,8 @@ case 1:
 		return $$[$0-1];
 	
 break;
-case 2: case 4:
- $$[$0-1].push($$[$0]); this.$ = $$[$0-1]; 
-break;
-case 3: case 5:
- this.$ = [$$[$0]]; 
-break;
 case 12: case 16: case 30:
  console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
-break;
-case 31:
-this.$ = instruccionesAPI.newDeclaration($$[$0-2],$$[$0-1]); 
-break;
-case 36:
-this.$ = instruccionesAPI.newAsignament($$[$0-3],$$[$0-1]); 
 break;
 }
 },

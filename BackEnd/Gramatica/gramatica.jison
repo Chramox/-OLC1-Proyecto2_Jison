@@ -165,15 +165,15 @@ Instruccion_Functions
 /*DECLARACIONES*/
 
 Declaracion
-    :Tipo_Dato Declaracion1 PUNTO_COMA 
+    :Tipo_Dato Declaracion1 PUNTO_COMA { $$ = instruccionesAPI.declaration0($1,$2) }
 ;
 Declaracion1
-    : Declaracion1 COMA Declaracion2
-    | Declaracion2
+    : Declaracion1 COMA Declaracion2 { $$ = instruccionesAPI.declaration1($1,$3,$2) }
+    | Declaracion2 { $$ = instruccionesAPI.declaration1($1, undefined, undefined) }
 ;
 Declaracion2
-    : IDENTIFICADOR IGUAL Expresion 
-    | IDENTIFICADOR 
+    : IDENTIFICADOR IGUAL Expresion { $$ = instruccionesAPI.instructionDeclaration($1,$2,$3) }
+    | IDENTIFICADOR { $$ = instruccionesAPI.instructionDeclaration($1,undefined,undefined) }
 ;
 Asignacion 
 	: IDENTIFICADOR IGUAL Expresion PUNTO_COMA 
@@ -191,29 +191,29 @@ Tipo_Dato
     |STRING
 ;
 Expresion 
-    : RESTA Expresion %prec UMENOS
-    | NOT Expresion
-    | Expresion SUMA Expresion
-    | Expresion RESTA Expresion 
-    | Expresion MULTIPLICACION Expresion 
-    | Expresion DIVISION Expresion 
-    | Expresion MODULO Expresion
-    | Expresion POTENCIA Expresion
-    | Expresion AND Expresion
-    | Expresion OR Expresion
-    | Expresion DOBLE_IGUAL Expresion
-    | Expresion DIFERENTEA Expresion
-    | Expresion MENOR_IGUAL Expresion
-    | Expresion MENOR Expresion
-    | Expresion MAYOR_IGUAL Expresion
-    | Expresion MAYOR Expresion 
-    | DECIMAL 
-    | NUMERO 
-    | TRUE   
-    | FALSE 
-    | CADENA 
-    | CARACTER 
-    | IDENTIFICADOR 
+    : RESTA Expresion %prec UMENOS 
+    | NOT Expresion  {$$ = instruccionesAPI.OperacionBinaria($2,undefined,"!")}
+    | Expresion SUMA Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"+")}
+    | Expresion RESTA Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"-")} 
+    | Expresion MULTIPLICACION Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"*")} 
+    | Expresion DIVISION Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"/")} 
+    | Expresion MODULO Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"%")}
+    | Expresion POTENCIA Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"^")}
+    | Expresion AND Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"&&")}
+    | Expresion OR Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"||")}
+    | Expresion DOBLE_IGUAL Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"==")}
+    | Expresion DIFERENTEA Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"!=")}
+    | Expresion MENOR_IGUAL Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"<=")}
+    | Expresion MENOR Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,"<")}
+    | Expresion MAYOR_IGUAL Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,">=")}
+    | Expresion MAYOR Expresion {$$ = instruccionesAPI.OperacionBinaria($1,$3,">")} 
+    | DECIMAL {$$ = {NUMERO_DEC:$1}}
+    | NUMERO {$$ = {NUMERO:$1}}
+    | TRUE   {$$ = {LOGICO:$1}}
+    | FALSE {$$ = {LOGICO:$1}}
+    | CADENA {$$ = {CADENA:$1}}
+    | CARACTER {$$ = {CARACTER:$1}}
+    | IDENTIFICADOR {$$ = {ID:$1}} 
     | LlamarFuncion  
     | PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE
 ;
@@ -257,7 +257,7 @@ Parametros
     | Tipo_Dato IDENTIFICADOR
 ;
 Imprimir
-    : IMPRIMIR PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA
+    : IMPRIMIR PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA { $$ = instruccionesAPI.instructionPrint($3) }
 ;
 For
     :FOR PARENTESIS_APERTURA Declaracion Expresion PUNTO_COMA ListaAumentoFor PARENTESIS_CIERRE BLOQUE_INS
@@ -268,19 +268,16 @@ ListaAumentoFor
     | Aumento
 ;
 Class
-    : CLASS IDENTIFICADOR LLAVE_APERTURA InstruccionesDentroClase LLAVE_CIERRE
-    | CLASS IDENTIFICADOR LLAVE_APERTURA LLAVE_CIERRE
+    : CLASS IDENTIFICADOR LLAVE_APERTURA InstruccionesDentroClase LLAVE_CIERRE { $$ = instruccionesAPI.instructionsClass($2,$4) }
+    | CLASS IDENTIFICADOR LLAVE_APERTURA LLAVE_CIERRE { $$ = instruccionesAPI.instructionsClass($2,undefined) }
 ;
 Import
-    : Import IMPORT IDENTIFICADOR PUNTO_COMA
-    | IMPORT IDENTIFICADOR PUNTO_COMA
+    : Import IMPORT IDENTIFICADOR PUNTO_COMA { $$ = instruccionesAPI.init_Import($1,$3)}
+    | IMPORT IDENTIFICADOR PUNTO_COMA { $$ = instruccionesAPI.instructionImport($2) }
 ;
 LlamarFuncion
-    : IDENTIFICADOR PARENTESIS_APERTURA Lista_Exp
-;
-Lista_Exp
-    : Expresiones PARENTESIS_CIERRE
-    | PARENTESIS_CIERRE
+    : IDENTIFICADOR PARENTESIS_APERTURA Expresiones PARENTESIS_CIERRE { $$ = instruccionesAPI.instructionCallFunction($1,$3) }
+    | IDENTIFICADOR PARENTESIS_APERTURA PARENTESIS_CIERRE { $$ = instruccionesAPI.instructionCallFunction($1, undefined) }   
 ;
 Expresiones
     : Expresiones COMA Expresion

@@ -83,278 +83,73 @@ function nuevaOperacion(operandoIzq, operandoDer, Tipo) {
  * El objetivo de esta API es proveer las funciones necesarias para la construcción de operaciones e instrucciones.
  */
 const instruccionesAPI = {
-
-	/**
-	 * Crea un nuevo objeto Tipo Operación para las operaciones binarias válidas.
-	 * @param {*} operandoIzq 
-	 * @param {*} operandoDer 
-	 * @param {*} Tipo 
-	 */
-	newBinaryOperation: function(operandoIzq, operandoDer, Tipo) {
-		return nuevaOperacion(operandoIzq, operandoDer, Tipo);
-	},
-
-	/**
-	 * Crea un nuevo objeto Tipo Operación para las operaciones unarias válidas
-	 * @param {*} operando 
-	 * @param {*} Tipo 
-	 */
-	newUnaryOperation: function(operando, Tipo) {
-		return nuevaOperacion(operando, undefined, Tipo);
-	},
-
-	/**
-	 * Crea un nuevo objeto Tipo Valor, esto puede ser una cadena, un número o un identificador
-	 * @param {*} valor 
-	 * @param {*} Tipo 
-	 */
-	newValue: function(valor, Tipo) {
-		return {
-			Valor: valor,
-			Tipo: Tipo
-		};
-	},
-	// OPERACIONES PERMITIDAS AFUERA DE LA CLASE
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia Mientras.
-	 * @param {*} ID 
-	 * @param {*} instrucciones 
-	 */
-	newClass: function(ID, instrucciones) {
-		return {
-			Tipo: TIPO_INSTRUCCION.CLASS,
-			ID : ID,
-			Instrucciones: instrucciones
-		};
-	},
-	/**
-	 * Crea un objeto Tipo Instrucción
-	 * @param {*} ID 
-	 */
-	newImport: function(ID) {
-		return {
-			Identificador : ID,
-			Tipo: TIPO_INSTRUCCION.IMPORT,
-		}
-	},
-	// FUNCIONES PERMITIDAS DENTRO DE LA CLASE
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia Declaración.
-	 * @param {*} Tipo 
-	 * @param {*} identificador 
-	 * @param {*} instrucciones
-	 */
-	newFunction: function(Tipo,identificador, instrucciones) {
-		var data_type;
-		switch(Tipo){
-			case "int": data_type = TIPO_DATO.INT ; break;
-			case "boolean": data_type = TIPO_DATO.BOOLEAN ; break;
-			case "String": data_type = TIPO_DATO.STRING ; break;
-			case "char": data_type = TIPO_DATO.CHAR ; break;
-			case "double": data_type = TIPO_DATO.DOUBLE; break;
-			case "void": data_type = TIPO_DATO.VOID; break;
-		}
-		return {
-			Tipo: TIPO_INSTRUCCION.FUNCION,
-			ID: identificador,
-			Tipo_Dato: data_type,
-			Instrucciones: instrucciones
-		}
-	},
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia Imprimir.
-	 * @param {*} Impresion
-	 */
-	newPrint: function(Impresion) {
-		return {
-			Tipo: TIPO_INSTRUCCION.IMPRIMIR,
-			Impresion: Impresion
-		};
-	},
-
 	
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia IF.
-	 * @param {*} Expresion
-	 * @param {*} instrucciones 
-	 */
-	newWhile: function(Expresion, instrucciones) {
-		return {
-			Tipo: TIPO_INSTRUCCION.WHILE,
-			Condicion: Expresion,
-			instrucciones: instrucciones
+	OperacionBinaria: function(left, right, op){
+		return{
+			IZQ: left,
+			DER: right,
+			Operador: op
 		};
 	},
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia IF.
-	 * @param {*} Expresion
-	 * @param {*} instrucciones 
-	 */
-	newDo_While: function(Expresion, instrucciones) {
-		return {
-			Tipo: TIPO_INSTRUCCION.DO_WHILE,
-			Condicion: Expresion,
-			instrucciones: instrucciones
+	declaration0: function(type, list){
+		return{
+			Declaracion:{
+				TIPO: type,
+				DECLA1: list,
+			}
 		};
 	},
-
-
-	/**
-	 * Crea un objeto Tipo instrucción para la sentencia Para.
-	 * @param {*} expresionLogica
-	 * @param {*} instrucciones
-	 * @param {*} aumento
-	 * @param {*} decremento
-	 */
-	nuevoPara: function (variable, valorVariable, expresionLogica, aumento, instrucciones) {
-		return {
-			Tipo: TIPO_INSTRUCCION.PARA,
-			expresionLogica: expresionLogica,
-			instrucciones: instrucciones,
-			aumento: aumento,
-			variable: variable,
-			valorVariable: valorVariable
-		}
-	},
-
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia Declaración.
-	 * @param {*} Tipo 
-	 * @param {*} instrucciones
-	 * @param {*} identificador 
-	 */
-	newDeclaration: function(Tipo,identificador) {
-		var data_type;
-		switch(Tipo){
-			case "int": data_type = TIPO_DATO.INT ; break;
-			case "boolean": data_type = TIPO_DATO.BOOLEAN ; break;
-			case "String": data_type = TIPO_DATO.STRING ; break;
-			case "char": data_type = TIPO_DATO.CHAR ; break;
-			case "double": data_type = TIPO_DATO.DOUBLE; break;
-		}
-		return {
-			Tipo: TIPO_INSTRUCCION.DECLARACION,
-			identificador: identificador,
-			tipo_dato: data_type
-		}
-	},
-	newDeclarationAsignament: function(identificador, Tipo, expresion){
+	declaration1: function(dec, decla2, comita){
 		return{
-			Tipo: TIPO_INSTRUCCION.DECLARACION,
-			identificador: identificador,
-			tipo_dato: Tipo,
-			expresion: expresion
-		}
+			DECLA1: dec,
+			COMA: comita,
+			DECLA2: decla2
+		};
 	},
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia Asignación.
-	 * @param {*} identificador 
-	 * @param {*} expresionNumerica 
-	 */
-	newAsignament: function(identificador, expresion) {
-		return {
-			Tipo: TIPO_INSTRUCCION.ASIGNACION,
-			Identificador: identificador,
-			Valor: expresion
-		}
-	},
-
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia If.
-	 * @param {*} expresionLogica 
-	 * @param {*} instrucciones 
-	 */
-	newIf: function(expresionLogica, instrucciones) {
-		return {
-			Tipo: TIPO_INSTRUCCION.IF,
-			expresionLogica: expresionLogica,
-			instrucciones: instrucciones
-		}
-	},
-
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia If-Else.
-	 * @param {*} expresionLogica 
-	 * @param {*} instruccionesIfVerdadero 
-	 * @param {*} instruccionesIfFalso 
-	 */
-	newIfElse: function(expresionLogica, instruccionesIfVerdadero, instruccionesIfFalso) {
-		return {
-			Tipo: TIPO_INSTRUCCION.IF_ELSE,
-			expresionLogica: expresionLogica,
-			instruccionesIfVerdadero: instruccionesIfVerdadero,
-			instruccionesIfFalso: instruccionesIfFalso
-		}
-	},
-  
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia Switch.
-	 * @param {*} expresionNumerica 
-	 * @param {*} instrucciones 
-	 */
-	nuevoSwitch: function(expresionNumerica, casos) {
-		return {
-			Tipo: TIPO_INSTRUCCION.SWITCH,
-			expresionNumerica: expresionNumerica,
-			casos: casos
-		}
-	},
-
-	/**
-	 * Crea una lista de casos para la sentencia Switch.
-	 * @param {*} caso 
-	 */
-	nuevoListaCasos: function (caso) {
-		var casos = []; 
-		casos.push(caso);
-		return casos;
-	},
-
-	/**
-	 * Crea un objeto Tipo OPCION_SWITCH para una CASO de la sentencia switch.
-	 * @param {*} expresionNumerica 
-	 * @param {*} instrucciones 
-	 */
-	nuevoCaso: function(expresionNumerica, instrucciones) {
-		return {
-			Tipo: TIPO_OPCION_SWITCH.CASO,
-			expresionNumerica: expresionNumerica,
-			instrucciones: instrucciones
-		}
-	},
-	/**
-	 * Crea un objeto Tipo OPCION_SWITCH para un CASO DEFECTO de la sentencia switch.
-	 * @param {*} instrucciones 
-	 */
-	nuevoCasoDef: function(instrucciones) {
-		return {
-			Tipo: TIPO_OPCION_SWITCH.DEFECTO,
-			instrucciones: instrucciones
-		}
-	},
-    
-	/**
-	* Crea un objeto Tipo Operador (+ , - , / , *) 
-	* @param {*} operador 
-	*/
-	nuevoOperador: function(operador){
-		return operador 
-	},
- 
-	/**
-	 * Crea un objeto Tipo Instrucción para la sentencia Asignacion con Operador
-	 * @param {*} identificador 
-	 * @param {*} operador 
-	 * @param {*} expresionCadena 
-	 */
-	nuevoAsignacionSimplificada: function(identificador, operador , expresionNumerica){
+	instructionDeclaration: function(id, asig, expr){
 		return{
-			Tipo: TIPO_INSTRUCCION.ASIGNACION_SIMPLIFICADA,
-			operador : operador,
-			expresionNumerica: expresionNumerica,
-			identificador : identificador
-		} 
+			IDENTIFICADOR: id,
+			ASIG: asig,
+			EXPRESION: expr
+		};
+	},
+	init_Import: function(imports, imp){
+		return{
+			IMPORTACIONES: imports,
+			IMPORTACION: imp
+		};
+	},
+	instructionImport: function(importacion){
+		return{
+			RESERVADA: "import",
+			IDENTIFICADOR: importacion 
+		};
+	},
+	instructionsOutsideClass: function(instrucciones) {
+		return{
+			InicioArbol: instrucciones
+		};
+	},
+	instructionsClass: function(identificadorClase, instrucciones) {
+		return{
+			RESERVADA: "class",
+			IDENTIFICADOR: identificadorClase,
+			INST: instrucciones
+		};
+	},
+	instructionPrint: function(valor) {
+		return{
+			RESERVADA: "System.out.println",
+			Valor: valor
+		};
+	},
+	instructionCallFunction: function(ID, lista_param){
+		return{
+			IDENTIFICADOR: ID,
+			PARAMETROS: lista_param
+		};
 	}
+
 }
 // Exportamos nuestras constantes y nuestra API
 
