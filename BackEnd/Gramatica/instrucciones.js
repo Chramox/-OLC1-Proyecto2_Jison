@@ -91,11 +91,23 @@ const instruccionesAPI = {
 			Operador: op
 		};
 	},
+	instructionAsig: function(id, value){
+		return{
+			ID: id,
+			Valor: value
+		};
+	},
+	instructionPlusMenus1: function(id, sign){
+		return{
+			ID: id,
+			INST: sign
+		};
+	},
 	declaration0: function(type, list){
 		return{
 			Declaracion:{
 				TIPO: type,
-				DECLA1: list,
+				DECLA1: list
 			}
 		};
 	},
@@ -125,28 +137,134 @@ const instruccionesAPI = {
 			IDENTIFICADOR: importacion 
 		};
 	},
-	instructionsOutsideClass: function(instrucciones) {
+	instructionsINIT: function(imports, classes) {
 		return{
-			InicioArbol: instrucciones
+			IMPORTACIONES: imports,
+			CLASES: classes
 		};
 	},
-	instructionsClass: function(identificadorClase, instrucciones) {
+	instructionListClass: function(c1,c2){
+		return{
+			CLASES:c1,
+			CLASE: c2
+		};
+	},
+	blockInsClass: function(instrucciones, inst){
+		return{
+			INSTRUCCIONES: instrucciones,
+			INSTRUCCION:  inst
+		};
+	},
+	instructionClass: function(identificadorClase, instrucciones) {
 		return{
 			RESERVADA: "class",
 			IDENTIFICADOR: identificadorClase,
 			INST: instrucciones
 		};
 	},
-	instructionPrint: function(valor) {
+	instructionPrint: function(res,valor) {
 		return{
-			RESERVADA: "System.out.println",
+			RESERVADA: res,
 			Valor: valor
+		};
+	},
+	intructionReturn: function (valor) {
+		return{
+			RESERVADA: "return",
+			Valor: valor
+		};
+	},
+	instructionContinue: function (){
+		return{
+			RESERVADA: "continue"
+		};
+	},
+	instructionBreak: function(){
+		return{
+			RESERVADA:"break"
 		};
 	},
 	instructionCallFunction: function(ID, lista_param){
 		return{
 			IDENTIFICADOR: ID,
 			PARAMETROS: lista_param
+		};
+	},
+
+
+	/*
+		SENTENCIAS DE EJECUCION Y CICLOS
+	*/
+	newSwitch: function(condicion, ListaCase){
+		return{
+			Tipo :"switch",
+			Condicion: condicion,
+			ListadoCase: ListaCase
+		};
+	},
+	newCase: function(expresion, instrucciones){
+		return{
+			Case: expresion,
+			Instrucciones: instrucciones
+		};
+	},
+	newIf: function(condicion, instIF, ListaElseIF, Else){
+		return{
+			TIPO: "if",
+			Condicion: condicion,
+			InstruccionesIF: instIF,
+			Else: Else,
+			ListadoElseIF: ListaElseIF 
+		};
+	},
+	newElse: function(inst){
+		return{
+			TIPO: "else",
+			instrucciones: inst
+		};
+	},
+	newElseIf: function(condicion, instrucciones){
+		return{
+			TIPO: "else if",
+			Condicion: condicion,
+			Instrucciones: instrucciones
+		};
+	},
+	newWhile: function(Expresion,instrucciones) {
+		return {
+			TIPO:"while" ,
+			Condicion: Expresion,
+			Instrucciones: instrucciones
+		};
+	},
+	newDo_While: function(Expresion, instrucciones) {
+		return {
+			TIPO: "do while",
+			Condicion: Expresion,
+			Instrucciones: instrucciones
+		};
+	},
+	newFunction: function(tipo,id,param,instr){
+		return{
+			TIPO_FUNCION: tipo,
+			IDENTIFICADOR: id,
+			PARAMETROS: param,
+			INSTRUCCIONES : instr
+		};
+	},
+	newFor: function(inicio_for, final_for, aumento_decremento, instrucciones){
+		return{
+			TIPO: "for",
+			InicioFor: inicio_for,
+			CondicionFinalizacion: final_for,
+			Recorrido: aumento_decremento,
+			Instrucciones: instrucciones
+		};
+	},
+	newParam: function(tipo, id){
+		return{
+			TIPO_DATO: tipo,
+			ID: id
 		};
 	}
 

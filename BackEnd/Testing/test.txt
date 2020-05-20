@@ -1,23 +1,16 @@
 import hola;
 import das;
 import nel;
-class Nodo{
 
-}
 class Principal{
-    void main(){
-        while(a == 5){
-        hola = 4 + 5*8;
-        
-        int hola;
-            if(hola == 5){
-                int expresion;
-            }
-
-        } 
-        while(a == 3){
-            int hola;
+    String felicidad, estoyharto;
+    int PERRO;
+    
+}
+class Secundaria{
+    void quehuybo(int hola, String estoymuriendo){
+        while(hola != null){
+            System.out.print("YA ESTOY HARTO");
         }
     }
 }
-

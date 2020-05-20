@@ -99,45 +99,55 @@
 %left UMENOS
 %right 'NOT'
 %right 'INCREMENTO' 'DECREMENTO'
-// TODO: CAMBIAR ACCESO PARA AFUERA, DENTRO DE CLASE, AHORITA NO ESTAN, ESTAMOS PROBANDO ARBOL
 
 /* Asociación de operadores y precedencia */
 %start ini
 
 %% /* Definición de la gramática */
-
+/**/
 ini
-	:InstruccionesFueraClase EOF{
-		// cuado se haya reconocido la entrada completa retornamos el AST
-		return $1;
-	}
+    :Imports ClassINIT  EOF{  return instruccionesAPI.instructionsINIT($1,$2) }
+    |ClassINIT EOF{ return instruccionesAPI.instructionsINIT(undefined,$1) }
+    | error EOF { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
-InstruccionesFueraClase
-    : InstruccionesFueraClase Instruccion_OutsideClass 
-    | Instruccion_OutsideClass 
+/*
+ClassINIT
+    : ClassINIT Class  {$$ =  instruccionesAPI.instructionListClass($1,$2)}
+    | Class
+;
+Imports
+    : Imports IMPORT IDENTIFICADOR PUNTO_COMA  { $1.push(instruccionesAPI.instructionImport($3)); $$ = $1 }
+    | IMPORT IDENTIFICADOR PUNTO_COMA {$$ = [instruccionesAPI.instructionImport($2)]}
+;
+*/
+ClassINIT
+    : Class { $$ = [$1] }
+    | ClassINIT Class  {  $1.push($2); $$ = $1 }
+;
+Class
+    : CLASS IDENTIFICADOR LLAVE_APERTURA InstruccionesDentroClase LLAVE_CIERRE { $$ = instruccionesAPI.instructionClass($2,$4) }
+    | CLASS IDENTIFICADOR LLAVE_APERTURA LLAVE_CIERRE { $$ = instruccionesAPI.instructionClass($2,undefined) }
 ;
 InstruccionesDentroClase
-    : InstruccionesDentroClase Instruccion_InsideClass
-    | Instruccion_InsideClass
+    : InstruccionesDentroClase Instruccion_InsideClass {  $1.push($2); $$ = $1 }
+    | Instruccion_InsideClass { $$ = [$1] }
 ;
-
 BLOQUE_INS
-    : LLAVE_APERTURA BLOQUE_INS_PRIMA LLAVE_CIERRE
+    : LLAVE_APERTURA BLOQUE_INS_PRIMA LLAVE_CIERRE {$$ = $2}
     | LLAVE_APERTURA LLAVE_CIERRE
 ;   
 BLOQUE_INS_PRIMA
-    : BLOQUE_INS_PRIMA Instruccion_Functions
-    | Instruccion_Functions
+    : BLOQUE_INS_PRIMA Instruccion_Functions {  $1.push($2); $$ = $1 }
+    | Instruccion_Functions  { $$ = [$1] }
 ;
+BloqueCASES //NO LLEVAN LLAVES OBLIGATORIAS
+    : LLAVE_APERTURA BLOQUE_INS_PRIMA LLAVE_CIERRE
+    | BLOQUE_INS_PRIMA
+;  
 /*
     INTRUCCIONES SEPARADAS 
 */
-Instruccion_OutsideClass
-    : Import Class
-    | Class
-    | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
-   // | error TokEnd{ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
-;
+
 Instruccion_InsideClass
     : Declaracion
     | FuncionMetodo
@@ -156,9 +166,9 @@ Instruccion_Functions
     | Switch
     | Imprimir
     | Class
-    | BREAK PUNTO_COMA
-    | CONTINUE PUNTO_COMA
-    | Return
+    | BREAK PUNTO_COMA { $$ = instruccionesAPI.instructionBreak() }
+    | CONTINUE PUNTO_COMA { $$ = instruccionesAPI.instructionContinue() }
+    | Return 
     | LlamarFuncion PUNTO_COMA
     | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
@@ -176,12 +186,12 @@ Declaracion2
     | IDENTIFICADOR { $$ = instruccionesAPI.instructionDeclaration($1,undefined,undefined) }
 ;
 Asignacion 
-	: IDENTIFICADOR IGUAL Expresion PUNTO_COMA 
+	: IDENTIFICADOR IGUAL Expresion PUNTO_COMA {$$ = instruccionesAPI.instructionAsign($1,$2)}
     | Aumento PUNTO_COMA
 ;
 Aumento
-    : IDENTIFICADOR INCREMENTO
-    | IDENTIFICADOR DECREMENTO
+    : IDENTIFICADOR INCREMENTO { $$ = instruccionesAPI.instructionPlusMenus1($1,$2) } 
+    | IDENTIFICADOR DECREMENTO { $$ = instruccionesAPI.instructionPlusMenus1($1,$2) }
 ;
 Tipo_Dato
     :INT    
@@ -217,73 +227,91 @@ Expresion
     | LlamarFuncion  
     | PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE
 ;
+/*
+HAY TRES CASOS DE IF: 
+    1. SOLO IF
+    2. ELSE IF
+    3. SOLO ELSE
+*/
 If 
-    :IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS OptionalElse
+    :IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS //SOLO IF
+        { $$ = instruccionesAPI.newIf( $3, undefined, undefined) } 
+    |IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS Else//IF-ELSE
+        { $$ = instruccionesAPI.newIf($3,undefined,$6) } 
+    |IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS ListELSEIF //con else if pero sin else
+        { $$ = instruccionesAPI.newIf($3,$6, undefined) }
+    |IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS ListELSEIF Else // if mas completo
+        { $$ = instruccionesAPI.newIf($3,$6,$8) } 
 ;
-OptionalElse
-    : %empty /* empty */
-    | ELSE BLOQUE_INS
-    | ELSE IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS OptionalElse
+Else
+    : ELSE BLOQUE_INS { $$ = instruccionesAPI.newElse($2) }
+;
+ListELSEIF //viene por lo menos un else if
+    : ListELSEIF  Elseif {  $1.push($2); $$ = $1 }
+    | Elseif  { $$ = [$1] }
+;
+Elseif
+    : ELSE IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS 
+        { $$ = instruccionesAPI.newElseIf($4,$6) }
 ;
 Switch
     : SWITCH PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE LLAVE_APERTURA Lista_Case LLAVE_CIERRE
+        { $$ =  instruccionesAPI.newSwitch($3, $6) }
 ;
 Lista_Case
-    : Lista_Case Case
-    | Case
+    : Lista_Case Case {  $1.push($2); $$ = $1 }
+    | Case { $$ = [$1] }
 ;
 Case
-    : CASE Expresion DOS_PUNTOS InstruccionesMetodo_Funciones BREAK PUNTO_COMA
-    | DEFAULT DOS_PUNTOS InstruccionesMetodo_Funciones
+    : CASE Expresion DOS_PUNTOS BloqueCASES { $$ = instruccionesAPI.newCase($2,$4) }
+    | DEFAULT DOS_PUNTOS BloqueCASES { $$ = instruccionesAPI.newCase("default",$4) }
 ;
 Do
-    : DO BLOQUE_INS WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA
+    : DO BLOQUE_INS WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA  
+        { $$ = instruccionesAPI.newDo_While($5,$2) }
 ;
 While
     :WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS 
+        { $$ = instruccionesAPI.newWhile($3,$5) }
 ;
 FuncionMetodo
-    : Tipo_Dato IDENTIFICADOR PARENTESIS_APERTURA FuncionPrima BLOQUE_INS 
-    | VOID IDENTIFICADOR PARENTESIS_APERTURA FuncionPrima BLOQUE_INS 
-    | VOID MAIN PARENTESIS_APERTURA PARENTESIS_CIERRE BLOQUE_INS 
-
-;
-FuncionPrima
-    :Parametros PARENTESIS_CIERRE
-    |PARENTESIS_CIERRE
+    : Tipo_Dato IDENTIFICADOR PARENTESIS_APERTURA Parametros PARENTESIS_CIERRE BLOQUE_INS { $$ = instruccionesAPI.newFunction($1,$2,$4,$6) }
+    | Tipo_Dato IDENTIFICADOR PARENTESIS_APERTURA PARENTESIS_CIERRE BLOQUE_INS { $$ = instruccionesAPI.newFunction($1,$2,undefined,$5) }
+    | VOID IDENTIFICADOR PARENTESIS_APERTURA Parametros PARENTESIS_CIERRE BLOQUE_INS { $$ = instruccionesAPI.newFunction($1,$2,$4,$6) }
+    | VOID IDENTIFICADOR PARENTESIS_APERTURA PARENTESIS_CIERRE BLOQUE_INS { $$ = instruccionesAPI.newFunction($1,$2,undefined,$5) }
+    | VOID MAIN PARENTESIS_APERTURA PARENTESIS_CIERRE BLOQUE_INS { $$ = instruccionesAPI.newFunction($1,$2,undefined,$5) }
 ;
 Parametros
-    :Parametros COMA Tipo_Dato IDENTIFICADOR
-    | Tipo_Dato IDENTIFICADOR
+    : Parametros COMA Tipo_Dato IDENTIFICADOR { $1.push(instruccionesAPI.newParam($3,$4)); $$ = $1 }
+    | Tipo_Dato IDENTIFICADOR { $$ = [instruccionesAPI.newParam($1,$2)] }
 ;
 Imprimir
-    : IMPRIMIR PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA { $$ = instruccionesAPI.instructionPrint($3) }
+    : IMPRIMIR PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA 
+        { $$ = instruccionesAPI.instructionPrint($1,$3) }
 ;
 For
     :FOR PARENTESIS_APERTURA Declaracion Expresion PUNTO_COMA ListaAumentoFor PARENTESIS_CIERRE BLOQUE_INS
+        { instruccionesAPI.newFor($3,$4,$6,$8) }
     |FOR PARENTESIS_APERTURA Declaracion1 PUNTO_COMA Expresion PUNTO_COMA ListaAumentoFor PARENTESIS_CIERRE BLOQUE_INS
+        { instruccionesAPI.newFor($3,$5,$7,$9) }
 ;
 ListaAumentoFor
-    : ListaAumentoFor COMA Aumento
-    | Aumento
+    : ListaAumentoFor COMA Aumento  {  $1.push($3); $$ = $1 }
+    | Aumento { $$ = [$1] }
 ;
-Class
-    : CLASS IDENTIFICADOR LLAVE_APERTURA InstruccionesDentroClase LLAVE_CIERRE { $$ = instruccionesAPI.instructionsClass($2,$4) }
-    | CLASS IDENTIFICADOR LLAVE_APERTURA LLAVE_CIERRE { $$ = instruccionesAPI.instructionsClass($2,undefined) }
-;
-Import
-    : Import IMPORT IDENTIFICADOR PUNTO_COMA { $$ = instruccionesAPI.init_Import($1,$3)}
-    | IMPORT IDENTIFICADOR PUNTO_COMA { $$ = instruccionesAPI.instructionImport($2) }
+Imports
+    : Imports IMPORT IDENTIFICADOR PUNTO_COMA  { $1.push(instruccionesAPI.instructionImport($3)); $$ = $1 }
+    | IMPORT IDENTIFICADOR PUNTO_COMA {$$ = [instruccionesAPI.instructionImport($2)]}
 ;
 LlamarFuncion
     : IDENTIFICADOR PARENTESIS_APERTURA Expresiones PARENTESIS_CIERRE { $$ = instruccionesAPI.instructionCallFunction($1,$3) }
     | IDENTIFICADOR PARENTESIS_APERTURA PARENTESIS_CIERRE { $$ = instruccionesAPI.instructionCallFunction($1, undefined) }   
 ;
 Expresiones
-    : Expresiones COMA Expresion
-    | Expresion
+    : Expresiones COMA Expresion  {  $1.push($2); $$ = $1 }
+    | Expresion  { $$ = [$1] }
 ;
 Return
-    : RETURN Expresion PUNTO_COMA
-    | RETURN PUNTO_COMA
+    : RETURN Expresion PUNTO_COMA { $$ = instruccionesAPI.instructionReturn($2) }
+    | RETURN PUNTO_COMA { $$ = instruccionesAPI.instructionReturn(undefined) }
 ;
