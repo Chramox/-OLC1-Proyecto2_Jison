@@ -121,14 +121,12 @@ const instruccionesAPI = {
 			PARAMETROS: lista_param
 		};
 	},
-
-
 	/*
 		SENTENCIAS DE EJECUCION Y CICLOS
 	*/
 	newSwitch: function(condicion, ListaCase){
 		return{
-			Tipo :"switch",
+			TIPO_INST: "switch",
 			Condicion: condicion,
 			ListadoCase: ListaCase
 		};
@@ -177,6 +175,7 @@ const instruccionesAPI = {
 	},
 	newFunction: function(tipo,id,param,instr){
 		return{
+			TIPO_INST: "funcion",
 			TIPO_FUNCION: tipo,
 			IDENTIFICADOR: id,
 			PARAMETROS: param,

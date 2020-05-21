@@ -17,7 +17,7 @@
     }
     #editor_secundario{
     /** Setting height is also important, otherwise editor wont showup**/
-      height: 300px;
+      height: 362px;
     }
   </style>
 </head>
@@ -36,11 +36,13 @@
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" 
                         role="button" aria-haspopup="true" aria-expanded="false">Editor Principal</a>
                         <div class="dropdown-menu" >
-                          <a class="dropdown-item" ><label style="cursor: pointer;">
-                            Abrir
-                           <input id="subirArchivo" type="file" style="visibility: hidden;"/>
-                       </label></a>
-                          <a class="dropdown-item" (click)="guardarArchivo()">Guardar</a>
+                          <a class="dropdown-item" >
+                            <label style="cursor: pointer;" >
+                             Abrir
+                             <input id="subirArchivo" type="file" style="visibility: hidden;"/>
+                       </label>
+                      </a>
+                          <a class="dropdown-item" (click)="guardarArchivoPrincipal()">Guardar</a>
                           <div class="dropdown-divider"></div>
                           <a class="dropdown-item" href="#">Nuevo</a>
                         </div>
@@ -78,9 +80,19 @@
       <div class="card border-success mb-3">
         <div class="card-header">
           <h4 class="card-title">Copias</h4> 
-          <button type="button" class="btn btn-outline-success" style="margin-right: 10px;">+</button>
-          <button type="button" class="btn btn-outline-success" style="margin-right: 10px;">Abrir</button>
-          <button type="button" class="btn btn-outline-success" style="margin-right: 10px;">Guardar</button>
+          <div>
+            <button type="button" class="btn btn-outline-success" style="margin-right: 10px; margin-bottom: 7px;">+</button>
+            <label type="button" for="subirArchivoCopia" class="btn btn-outline-success" style="margin-right: 10px;">
+              Abrir
+            </label>
+            <input id="subirArchivoCopia" type="file" style="visibility: hidden;position: absolute;"/>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Nombre Archivo" id="nombre" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-outline-success" type="button" onclick="guardarArchivoB()">Guardar</button>
+              </div>
+            </div>
+          </div>
         </div>
           <div class="card-body">
             <ul class="nav nav-tabs">
@@ -133,5 +145,6 @@
       editor.setTheme("ace/theme/tomorrow_night");
       editor.session.setMode("ace/mode/java");
   </script>
+    <script src="js/funcionamiento.js"></script>
 </body>
 </html>
