@@ -1,0 +1,13 @@
+import hola;
+import das;
+import nel;
+
+class Principal{
+    String felicidad, estoyharto;
+    int PERRO;
+
+    int copia(int a, int b, String c){
+
+    }  
+    
+}

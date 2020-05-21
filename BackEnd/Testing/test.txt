@@ -4,13 +4,23 @@ import nel;
 
 class Principal{
     String felicidad, estoyharto;
+    error1
     int PERRO;
     
 }
+error
 class Secundaria{
     void quehuybo(int hola, String estoymuriendo){
         while(hola != null){
             System.out.print("YA ESTOY HARTO");
         }
+         System.out.print("SEGUNDO PRINT");
+          System.out.print("TERCER print");
     }
+    int copia(int a, int b, String c){
+        //error en el cochino if
+        if(a >> hola ){
+             System.out.print("ADENTRO IF CON ERROR");
+        }
+    }  
 }

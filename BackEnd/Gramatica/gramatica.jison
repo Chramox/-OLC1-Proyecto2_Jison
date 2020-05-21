@@ -71,7 +71,7 @@
 "System.out.println"                return "IMPRIMIR";
 "System.out.print"                  return "IMPRIMIR";
 
-\"[^\"]*\"              { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
+\"([^\\\"]|\\.)*\"      { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
 \'[^\']*\'              { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
 [0-9]+("."[0-9]+)?\b    return 'DECIMAL';
 [0-9]+\b                return 'ENTERO';
@@ -106,8 +106,8 @@
 %% /* Definición de la gramática */
 /**/
 ini
-    :Imports ClassINIT  EOF{  return instruccionesAPI.instructionsINIT($1,$2) }
-    |ClassINIT EOF{ return instruccionesAPI.instructionsINIT(undefined,$1) }
+    : Imports ClassINIT  EOF{  return instruccionesAPI.instructionsINIT($1,$2) }
+    | ClassINIT EOF{ return instruccionesAPI.instructionsINIT(undefined,$1) }
     | error EOF { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 /*
@@ -123,6 +123,7 @@ Imports
 ClassINIT
     : Class { $$ = [$1] }
     | ClassINIT Class  {  $1.push($2); $$ = $1 }
+    | ClassINIT error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 Class
     : CLASS IDENTIFICADOR LLAVE_APERTURA InstruccionesDentroClase LLAVE_CIERRE { $$ = instruccionesAPI.instructionClass($2,$4) }
@@ -170,7 +171,7 @@ Instruccion_Functions
     | CONTINUE PUNTO_COMA { $$ = instruccionesAPI.instructionContinue() }
     | Return 
     | LlamarFuncion PUNTO_COMA
-    | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    | error   { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 /*DECLARACIONES*/
 

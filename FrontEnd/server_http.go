@@ -17,6 +17,7 @@ func index(w http.ResponseWriter, r *http.Request)  {
 //TODO: QUE EL GO JALE EL ACE EDITOR
 func main()  {
 	http.HandleFunc("/", index)
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./js"))))
 	fmt.Println("HOla mundo")
 	http.ListenAndServe(":8080",nil)
 

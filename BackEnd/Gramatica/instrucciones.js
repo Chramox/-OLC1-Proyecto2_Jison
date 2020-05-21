@@ -1,66 +1,3 @@
-// Constantes para los tipos de 'valores' que reconoce nuestra gramática.
-const TIPO_VALOR = {
-	NUMERO:         'VAL_NUMERO',
-	IDENTIFICADOR:  'VAL_IDENTIFICADOR',
-    CADENA:         'VAL_CADENA', 
-    CHARACTER:           'VAL_CHAR',
-    BOOLEANO:        'VAL_BOOLEAN'
-}
-const TIPO_DATO = {
-    STRING:     'STRING',
-    INT:        'INT', 
-    CHAR:       'CHAR',
-    DOUBLE:     'DOUBLE',
-	BOOLEAN:    'BOOLEAN',
-	VOID: 		'VOID'
-}
-
-// Constantes para los tipos de 'operaciones' que soporta nuestra gramática.
-const TIPO_OPERACION = {
-
-    MAYOR_IGUAL: 	'OP_MAYOR_IGUAL',
-	MENOR_IGUAL:    'OP_MENOR_IGUAL',
-	DOBLE_IGUAL:    'OP_DOBLE_IGUAL',
-    DIFERENTE_A:    'DIFERENTE_A',
-    DECREMENTO:     'DECREMENTO',
-    INCREMENTO:     'INCREMENTO',
-
-	SUMA:           'OP_SUMA',
-	RESTA:          'OP_RESTA',
-	MULTIPLICACION: 'OP_MULTIPLICACION',
-    DIVISION:       'OP_DIVISION',
-    POTENCIA:       'OP_POTENCIA',
-    MODULO:         'OP_MODULO',
-	NEGATIVO:       'OP_NEGATIVO',
-	MAYOR_QUE:      'OP_MAYOR_QUE',
-	MENOR_QUE:      'OP_MENOR_QUE',
-
-	AND:  			'OP_AND',
-	OR: 			'OP_OR',
-	NOT:   			'OP_NOT'
-};
-
-// Constantes para los tipos de 'instrucciones' válidas en nuestra gramática.
-const TIPO_INSTRUCCION = {
-	WHILE:          'INST_WHILE',
-    DO_WHILE:       'INST_DO_WHILE',
-    IF:             'INST_IF',
-    ELSE:           'INST_ELSE',
-    FOR:            'INST_FOR',
-    SWITCH:         'INST_SWITCH',
-    ASIGNACION:     'INST_ASIGNACION',
-    IMPORT:         'INST_IMPORT',
-    DECLARACION:    'INST_DECLARACION',
-    WRITELINE:		'INST_WRITELINE',
-	CLASS:          'INST_CLASS',
-	FUNCION:		'INST_DECLA_FUNCION'
-}
-
-// Constantes para los tipos de OPCION_SWITCH validas en la gramática
-const TIPO_OPCION_SWITCH = { 
-	CASE: 			'CASE',
-	DEFAULT: 		'DEFAULT'
-} 
 
 /**
  * Esta función se encarga de crear objetos Tipo Operación.
@@ -125,15 +62,9 @@ const instruccionesAPI = {
 			EXPRESION: expr
 		};
 	},
-	init_Import: function(imports, imp){
-		return{
-			IMPORTACIONES: imports,
-			IMPORTACION: imp
-		};
-	},
 	instructionImport: function(importacion){
 		return{
-			RESERVADA: "import",
+			TIPO_INST: "import",
 			IDENTIFICADOR: importacion 
 		};
 	},
@@ -157,31 +88,31 @@ const instruccionesAPI = {
 	},
 	instructionClass: function(identificadorClase, instrucciones) {
 		return{
-			RESERVADA: "class",
+			TIPO_INST: "class",
 			IDENTIFICADOR: identificadorClase,
 			INST: instrucciones
 		};
 	},
 	instructionPrint: function(res,valor) {
 		return{
-			RESERVADA: res,
+			TIPO_INST: res,
 			Valor: valor
 		};
 	},
 	intructionReturn: function (valor) {
 		return{
-			RESERVADA: "return",
+			TIPO_INST: "return",
 			Valor: valor
 		};
 	},
 	instructionContinue: function (){
 		return{
-			RESERVADA: "continue"
+			TIPO_INST: "continue"
 		};
 	},
 	instructionBreak: function(){
 		return{
-			RESERVADA:"break"
+			TIPO_INST:"break"
 		};
 	},
 	instructionCallFunction: function(ID, lista_param){
@@ -210,7 +141,7 @@ const instruccionesAPI = {
 	},
 	newIf: function(condicion, instIF, ListaElseIF, Else){
 		return{
-			TIPO: "if",
+			TIPO_INST: "if",
 			Condicion: condicion,
 			InstruccionesIF: instIF,
 			Else: Else,
@@ -219,27 +150,27 @@ const instruccionesAPI = {
 	},
 	newElse: function(inst){
 		return{
-			TIPO: "else",
+			TIPO_INST: "else",
 			instrucciones: inst
 		};
 	},
 	newElseIf: function(condicion, instrucciones){
 		return{
-			TIPO: "else if",
+			TIPO_INST: "else if",
 			Condicion: condicion,
 			Instrucciones: instrucciones
 		};
 	},
 	newWhile: function(Expresion,instrucciones) {
 		return {
-			TIPO:"while" ,
+			TIPO_INST:"while" ,
 			Condicion: Expresion,
 			Instrucciones: instrucciones
 		};
 	},
 	newDo_While: function(Expresion, instrucciones) {
 		return {
-			TIPO: "do while",
+			TIPO_INST: "do while",
 			Condicion: Expresion,
 			Instrucciones: instrucciones
 		};
@@ -254,7 +185,7 @@ const instruccionesAPI = {
 	},
 	newFor: function(inicio_for, final_for, aumento_decremento, instrucciones){
 		return{
-			TIPO: "for",
+			TIPO_INST: "for",
 			InicioFor: inicio_for,
 			CondicionFinalizacion: final_for,
 			Recorrido: aumento_decremento,
@@ -271,9 +202,5 @@ const instruccionesAPI = {
 }
 // Exportamos nuestras constantes y nuestra API
 
-module.exports.TIPO_OPERACION = TIPO_OPERACION;
-module.exports.TIPO_INSTRUCCION = TIPO_INSTRUCCION;
-module.exports.TIPO_VALOR = TIPO_VALOR;
+
 module.exports.instruccionesAPI = instruccionesAPI;
-module.exports.TIPO_OPCION_SWITCH = TIPO_OPCION_SWITCH;
-module.exports.TIPO_DATO = TIPO_DATO;
