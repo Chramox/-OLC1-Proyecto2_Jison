@@ -44,7 +44,7 @@ const instruccionesAPI = {
 		return{
 			Declaracion:{
 				TIPO: type,
-				DECLA1: list
+				ListaDeclaraciones: list
 			}
 		};
 	},
@@ -99,7 +99,7 @@ const instruccionesAPI = {
 			Valor: valor
 		};
 	},
-	intructionReturn: function (valor) {
+	instructionReturn: function (valor) {
 		return{
 			TIPO_INST: "return",
 			Valor: valor

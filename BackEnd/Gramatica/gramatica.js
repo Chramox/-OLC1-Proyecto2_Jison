@@ -117,10 +117,10 @@ case 35:
  this.$ = instruccionesAPI.declaration0($$[$0-2],$$[$0-1]) 
 break;
 case 36:
- this.$ = instruccionesAPI.declaration1($$[$0-2],$$[$0],$$[$0-1]) 
+$$[$0-2].push($$[$0]); this.$ = $$[$0-2] 
 break;
 case 37:
- this.$ = instruccionesAPI.declaration1($$[$0], undefined, undefined) 
+this.$ = [$$[$0]]
 break;
 case 38:
  this.$ = instruccionesAPI.instructionDeclaration($$[$0-2],$$[$0-1],$$[$0]) 

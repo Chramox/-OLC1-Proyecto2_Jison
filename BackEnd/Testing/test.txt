@@ -8,12 +8,11 @@ class Principal{
     
 }
 class Secundaria{
-    double hola;
-    void quehuybo(int hola, String estoymuriendo){
-        while(hola != null){
-            System.out.print("YA ESTOY HARTO");
-        }
-         System.out.print("SEGUNDO PRINT");
-          System.out.print("TERCER print");
-    }
+    double hola = 3;
+    
+    int original(int a, int b, String c){
+        char var = 5;
+        System.out.print("METODO COPIA");
+        return 5;
+    }  
 }

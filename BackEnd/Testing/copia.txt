@@ -2,12 +2,14 @@ import hola;
 import das;
 import nel;
 
-class Principal{
+class Secundaria{
     String felicidad, estoyharto;
     int PERRO;
 
     int copia(int a, int b, String c){
-
+        char varCopia;
+        System.out.print("METODO COPIA");
+        return 5;
     }  
     
 }

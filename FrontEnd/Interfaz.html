@@ -19,6 +19,10 @@
     /** Setting height is also important, otherwise editor wont showup**/
       height: 362px;
     }
+    #editor_salida{
+    /** Setting height is also important, otherwise editor wont showup**/
+      height: 200px;
+    }
   </style>
 </head>
 <body>
@@ -110,6 +114,41 @@
     </div>
   </div>
 
+  <!-- SALIDAS -->
+  <div style="padding-left: 30px; padding-right: 30px;">
+    <div class="card border-success mb-3">
+      <div class="card-header">
+        <h4 class="card-title">Salida</h4> 
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Nombre Archivo" id="nombre" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-outline-success" type="button" onclick="guardarSalida()">Guardar</button>
+            </div>
+          </div>
+      </div>
+        <div class="card-body">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#home">Copia Encontrada</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#home">Errores Lexicos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#home">Errores Sintacticos</a>
+            </li>
+          </ul>
+          <div id="tabContent" class="tab-content">
+            <div class="tab-pane fade active show" id="Copia Encontrada">
+              <div id="editor_salida"></div>
+            </div>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL -->
 <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
   Launch demo modal
@@ -141,9 +180,14 @@
       editor.setTheme("ace/theme/tomorrow_night");
       editor.session.setMode("ace/mode/java");
 
-      var editor = ace.edit("editor_secundario");
-      editor.setTheme("ace/theme/tomorrow_night");
-      editor.session.setMode("ace/mode/java");
+      var editor_secundario = ace.edit("editor_secundario");
+      editor_secundario.setTheme("ace/theme/tomorrow_night");
+      editor_secundario.session.setMode("ace/mode/java");
+
+      var editor_salida = ace.edit("editor_salida");
+      editor_salida.setTheme("ace/theme/tomorrow_night");
+      editor_salida.session.setMode("ace/mode/java");
+      
   </script>
     <script src="js/funcionamiento.js"></script>
 </body>

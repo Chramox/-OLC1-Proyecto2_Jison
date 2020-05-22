@@ -174,13 +174,18 @@ Instruccion_Functions
     | error   { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 /*DECLARACIONES*/
-
+/*
+ListELSEIF //viene por lo menos un else if
+    : ListELSEIF  Elseif {  $1.push($2); $$ = $1 }
+    | Elseif  { $$ = [$1] }
+;
+*/
 Declaracion
     :Tipo_Dato Declaracion1 PUNTO_COMA { $$ = instruccionesAPI.declaration0($1,$2) }
 ;
 Declaracion1
-    : Declaracion1 COMA Declaracion2 { $$ = instruccionesAPI.declaration1($1,$3,$2) }
-    | Declaracion2 { $$ = instruccionesAPI.declaration1($1, undefined, undefined) }
+    : Declaracion1 COMA Declaracion2 {$1.push($3); $$ = $1 }
+    | Declaracion2 {$$ = [$1]}
 ;
 Declaracion2
     : IDENTIFICADOR IGUAL Expresion { $$ = instruccionesAPI.instructionDeclaration($1,$2,$3) }
