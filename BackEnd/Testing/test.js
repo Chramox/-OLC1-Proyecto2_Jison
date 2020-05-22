@@ -47,6 +47,7 @@ let variablesCopia = [],
 fs.readFile("./test.txt", (err, data) => {
   if (err) throw err;
   let hola = parser.parse(data.toString()).AST;
+  ///console.log( JSON.stringify(hola, null, 4)  );
   // fs.readFile("./copia.txt", (err, data) => {
   //   if (err) throw err;
   //   let hola2 = parser.parse(data.toString()).AST;

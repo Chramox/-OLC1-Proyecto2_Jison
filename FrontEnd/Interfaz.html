@@ -19,7 +19,15 @@
     /** Setting height is also important, otherwise editor wont showup**/
       height: 362px;
     }
-    #editor_salida{
+    /* #editor_salida{
+    /** Setting height is also important, otherwise editor wont showup*
+      height: 200px;
+    } */
+    #editor_lexicos{
+    /** Setting height is also important, otherwise editor wont showup**/
+      height: 200px;
+    }
+    #editor_sintacticos{
     /** Setting height is also important, otherwise editor wont showup**/
       height: 200px;
     }
@@ -54,15 +62,17 @@
                       <li class="nav-item dropdown show">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Reportes</a>
                         <div class="dropdown-menu" >
-                            <a class="dropdown-item" href="#">Reporte Errores Lexicos y Sintacticos</a>
-                            <a class="dropdown-item" href="#">Reporte de Clases Copia</a>
-                            <a class="dropdown-item" href="#">Reporte de Funciones Copia</a>
+                            <a class="dropdown-item" href="#">Reporte Errores Lexicos</a>
+                            <a class="dropdown-item" href="#">Reporte de Errrores Sintacticos</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Reporte AST</a>
+                            <a class="dropdown-item" href="#">AST y Errores</a>
                         </div>
                       </li>
                   <li class="nav-item">
                     <a class="nav-link" data-toggle="modal" data-target="#exampleModal">Acerca De</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" onclick="buscarCopia()">Buscar Copia</a>
                   </li>
                 </ul>
             </div>
@@ -90,6 +100,7 @@
               Abrir
             </label>
             <input id="subirArchivoCopia" type="file" style="visibility: hidden;position: absolute;"/>
+            <button class="btn btn-outline-success" type="button" onclick="arbol_B()"  style="margin-right: 10px; margin-bottom: 7px;">AST y Errores</button>
             <div class="input-group mb-3">
               <input type="text" class="form-control" placeholder="Nombre Archivo" id="nombre" aria-describedby="basic-addon2">
               <div class="input-group-append">
@@ -115,6 +126,7 @@
   </div>
 
   <!-- SALIDAS -->
+  
   <div style="padding-left: 30px; padding-right: 30px;">
     <div class="card border-success mb-3">
       <div class="card-header">
@@ -129,27 +141,76 @@
         <div class="card-body">
           <ul class="nav nav-tabs">
             <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#home">Copia Encontrada</a>
+              <a class="nav-link active" data-toggle="tab" href="#clases">Clases Copia</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#home">Errores Lexicos</a>
+              <a class="nav-link" data-toggle="tab" href="#metodos">Metodos Copia</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#home">Errores Sintacticos</a>
+              <a class="nav-link" data-toggle="tab" href="#variables">Variables Copia</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#lexicos">Errores Lexicos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link"  data-toggle="tab" href="#sintacticos">Errores Sintacticos</a>
             </li>
           </ul>
-          <div id="tabContent" class="tab-content">
-            <div class="tab-pane fade active show" id="Copia Encontrada">
-              <div id="editor_salida"></div>
+          <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active show" id="clases">
+              <table class="table table-hover" id="tabla_clases">
+                <thead>
+                  <tr>
+                    <th scope="col">Nombre Clase</th>
+                    <th scope="col">Cantidad de Metodos/Funciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table> 
             </div>
-          </div>  
+            <div class="tab-pane fade " id="metodos">
+              <table class="table table-hover" id="tabla_metodos">
+                <thead>
+                  <tr>
+                    <th scope="col">Clase Padre</th>
+                    <th scope="col">Tipo Retorno</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Parametros</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table> 
+            </div>
+            <div class="tab-pane fade " id="variables">
+              <table class="table table-hover" id="tabla_variables">
+                <thead>
+                  <tr>
+                    <th scope="col">Clase Padre</th>
+                    <th scope="col">Metodo Padre</th>
+                    <th scope="col">Tipo Retorno</th>
+                    <th scope="col">Identificador</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table> 
+            </div>
+            <div class="tab-pane fade" id="lexicos">
+              <div id="editor_lexicos"></div>
+            </div>
+            <div class="tab-pane fade" id="sintacticos">
+              <div id="editor_sintacticos"></div>
+            </div>
+          </div> 
         </div>
       </div>
     </div>
   </div>
 </div>
 <!-- MOSTRAR AST -->
-<h4>Arbol Sintactico</h4>
+<h4 style="padding-left: 30px;">Arbol Sintactico</h4>
 <div style="padding-left: 30px; padding-right: 30px;">
 <div id="arbol_AST"></div>
 </div>
@@ -189,12 +250,20 @@
       editor_secundario.setTheme("ace/theme/tomorrow_night");
       editor_secundario.session.setMode("ace/mode/java");
 
-      var editor_salida = ace.edit("editor_salida");
-      editor_salida.setTheme("ace/theme/tomorrow_night");
-      editor_salida.session.setMode("ace/mode/java");
+      // var editor_salida = ace.edit("editor_salida");
+      // editor_salida.setTheme("ace/theme/tomorrow_night");
+      // editor_salida.session.setMode("ace/mode/java");
+
+      var editor_lexicos = ace.edit("editor_lexicos");
+      editor_lexicos.setTheme("ace/theme/tomorrow_night");
+      editor_lexicos.session.setMode("ace/mode/java");
+
+      var editor_sintacticos = ace.edit("editor_sintacticos");
+      editor_sintacticos.setTheme("ace/theme/tomorrow_night");
+      editor_sintacticos.session.setMode("ace/mode/java");
       
   </script>
     <script src="js/funcionamiento.js"></script>
-    <script src="https://cdn.rawgit.com/caldwell/renderjson/master/renderjson.js"></script>
+    <script src="js/renderjson.js"></script>
 </body>
 </html>

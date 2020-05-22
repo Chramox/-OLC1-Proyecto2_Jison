@@ -111,37 +111,21 @@ ini
         {  return {
             AST: instruccionesAPI.instructionsINIT($1,$2), 
             ListaErrores: instruccionesAPI.getListaErrores()};}
-    | ClassINIT EOF
+    | Error ClassINIT EOF
         { return {
             AST: instruccionesAPI.instructionsINIT(undefined,$1),
             ListaErrores: instruccionesAPI.getListaErrores()
         };}
-    | error EOF 
-        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
-        //     instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column)); 
-        //     return {
-        //         AST: instruccionesAPI.instructionsINIT($1,$2),
-        //         ListaErrores: instruccionesAPI.getListaErrores()
-        //     };
-        // }
+    | ClassINIT EOF 
+        { return {
+            AST: instruccionesAPI.instructionsINIT(undefined,$1),
+            ListaErrores: instruccionesAPI.getListaErrores()
+        };}
 ;
-/*
-ClassINIT
-    : ClassINIT Class  {$$ =  instruccionesAPI.instructionListClass($1,$2)}
-    | Class
-        { console.error('Este es un error sintáctico: ' + yy.parser.hash.token +  ', en la linea: ' + @1.first_line + ', en la columna: ' + @1.first_column + " se esperaba: " + yy.parser.hash.expected ); 
-        instruccionesAPI.pushLista(instruccionesAPI.errorLS("Sintactico", yy.parser.hash.expected, yy.parser.hash.token, @1.first_line, @1.first_column)); }
-;
-Imports
-    : Imports IMPORT IDENTIFICADOR PUNTO_COMA  { $1.push(instruccionesAPI.instructionImport($3)); $$ = $1 }
-    | IMPORT IDENTIFICADOR PUNTO_COMA {$$ = [instruccionesAPI.instructionImport($2)]}
-;
-*/
+
 ClassINIT
     : Class { $$ = [$1] }
     | ClassINIT Class  {  $1.push($2); $$ = $1 }
-    | ClassINIT error 
-        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
         //  instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column));  }
 ;
 Class
@@ -172,8 +156,7 @@ Instruccion_InsideClass
     : Declaracion
     | FuncionMetodo
     | Clase
-    | error PUNTO_COMA
-        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    | Error 
         // instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column));  }
  //   | error TokEnd{ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
@@ -192,17 +175,9 @@ Instruccion_Functions
     | CONTINUE PUNTO_COMA { $$ = instruccionesAPI.instructionContinue() }
     | Return 
     | LlamarFuncion PUNTO_COMA
-    | error PUNTO_COMA
-        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
-        //  instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column));  }
+    | Error 
+
 ;
-/*DECLARACIONES*/
-/*
-ListELSEIF //viene por lo menos un else if
-    : ListELSEIF  Elseif {  $1.push($2); $$ = $1 }
-    | Elseif  { $$ = [$1] }
-;
-*/
 Declaracion
     :Tipo_Dato Declaracion1 PUNTO_COMA { $$ = instruccionesAPI.declaration0($1,$2) }
 ;
@@ -261,16 +236,17 @@ HAY TRES CASOS DE IF:
     1. SOLO IF
     2. ELSE IF
     3. SOLO ELSE
+    function(condicion, instIF, ListaElseIF, Else)
 */
 If 
     :IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS //SOLO IF
-        { $$ = instruccionesAPI.newIf( $3, undefined, undefined) } 
+        { $$ = instruccionesAPI.newIf( $3, $5, undefined, undefined) } 
     |IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS Else//IF-ELSE
-        { $$ = instruccionesAPI.newIf($3,undefined,$6) } 
+        { $$ = instruccionesAPI.newIf( $3, $5, undefined, $6) } 
     |IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS ListELSEIF //con else if pero sin else
-        { $$ = instruccionesAPI.newIf($3,$6, undefined) }
+        { $$ = instruccionesAPI.newIf( $3, $5, $6, undefined) }
     |IF PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE BLOQUE_INS ListELSEIF Else // if mas completo
-        { $$ = instruccionesAPI.newIf($3,$6,$8) } 
+        { $$ = instruccionesAPI.newIf( $3, $5, $6, $7 ) } 
 ;
 Else
     : ELSE BLOQUE_INS { $$ = instruccionesAPI.newElse($2) }
@@ -293,7 +269,7 @@ Lista_Case
 ;
 Case
     : CASE Expresion DOS_PUNTOS BloqueCASES { $$ = instruccionesAPI.newCase($2,$4) }
-    | DEFAULT DOS_PUNTOS BloqueCASES { $$ = instruccionesAPI.newCase("default",$4) }
+    | DEFAULT DOS_PUNTOS BloqueCASES { $$ = instruccionesAPI.newCase("default",$3) }
 ;
 Do
     : DO BLOQUE_INS WHILE PARENTESIS_APERTURA Expresion PARENTESIS_CIERRE PUNTO_COMA  
@@ -345,5 +321,6 @@ Return
     | RETURN PUNTO_COMA { $$ = instruccionesAPI.instructionReturn(undefined) }
 ;
 Error
-    : error
+    : error 
+     { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;

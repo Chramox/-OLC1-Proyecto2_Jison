@@ -46,7 +46,7 @@ const instruccionesAPI = {
 			Operador: op
 		};
 	},
-	instructionAsig: function(id, value){
+	instructionAsign: function(id, value){
 		return{
 			ID: id,
 			Valor: value
