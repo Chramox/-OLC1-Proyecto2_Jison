@@ -117,14 +117,13 @@ ini
             ListaErrores: instruccionesAPI.getListaErrores()
         };}
     | error EOF 
-        { 
-            console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
-            instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column)); 
-            return {
-                AST: instruccionesAPI.instructionsINIT($1,$2),
-                ListaErrores: instruccionesAPI.getListaErrores()
-            };
-        }
+        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+        //     instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column)); 
+        //     return {
+        //         AST: instruccionesAPI.instructionsINIT($1,$2),
+        //         ListaErrores: instruccionesAPI.getListaErrores()
+        //     };
+        // }
 ;
 /*
 ClassINIT
@@ -142,8 +141,8 @@ ClassINIT
     : Class { $$ = [$1] }
     | ClassINIT Class  {  $1.push($2); $$ = $1 }
     | ClassINIT error 
-        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
-          instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column));  }
+        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+        //  instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column));  }
 ;
 Class
     : CLASS IDENTIFICADOR LLAVE_APERTURA InstruccionesDentroClase LLAVE_CIERRE { $$ = instruccionesAPI.instructionClass($2,$4) }
@@ -173,9 +172,9 @@ Instruccion_InsideClass
     : Declaracion
     | FuncionMetodo
     | Clase
-    | error 
-        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
-         instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column));  }
+    | error PUNTO_COMA
+        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+        // instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column));  }
  //   | error TokEnd{ console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
@@ -193,9 +192,9 @@ Instruccion_Functions
     | CONTINUE PUNTO_COMA { $$ = instruccionesAPI.instructionContinue() }
     | Return 
     | LlamarFuncion PUNTO_COMA
-    | error   
-        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
-          instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column));  }
+    | error PUNTO_COMA
+        { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+        //  instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column));  }
 ;
 /*DECLARACIONES*/
 /*
@@ -344,4 +343,7 @@ Expresiones
 Return
     : RETURN Expresion PUNTO_COMA { $$ = instruccionesAPI.instructionReturn($2) }
     | RETURN PUNTO_COMA { $$ = instruccionesAPI.instructionReturn(undefined) }
+;
+Error
+    : error
 ;

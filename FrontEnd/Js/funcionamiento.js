@@ -79,11 +79,14 @@ function arbolAST(json)
 }
 //PETICION AL SERVIDOR ARBOL ARCHIVO PRINCIPAL
 function arbol_A(){
-  var editor = ace.edit("editor_secundario");
+  var editor = ace.edit("editor");
   let textA = editor.getValue();
-  let ast = getAST_ArchivoA(textA);
-  console.log(ast);
-  arbolAST(ast);
+  console.log(textA);
+  if (textA != ""){
+    getAST_ArchivoA(textA);
+
+  }
+  
 }
 
 
@@ -101,10 +104,9 @@ async function getAST_ArchivoA(txt) {
     .then((res) => res.json())
     .catch((error) => console.error("Error:", error))
     .then((response) => {
-      console.log("Success:", response.message);
-      return response.AST;
+      console.log("Success:", response.Salida);
+      arbolAST(response.AST);
     });
-  return ast;
 }
 
 //PETICION AL SERVIDOR ARBOL ARCHIVO SECUNDARIO

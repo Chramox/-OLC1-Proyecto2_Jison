@@ -47,19 +47,19 @@ let variablesCopia = [],
 fs.readFile("./test.txt", (err, data) => {
   if (err) throw err;
   let hola = parser.parse(data.toString()).AST;
-  fs.readFile("./copia.txt", (err, data) => {
-    if (err) throw err;
-    let hola2 = parser.parse(data.toString()).AST;
-    llenarEstructura(hola, "original");
-    llenarEstructura(hola2, "copia");
-    compararArchivos();
-    console.log("CLASES COPIA");
-    console.log(JSON.stringify(clasesCopia, null, 4));
-    console.log("METODOS COPIA");
-    console.log(JSON.stringify(metodosCopia, null, 4));
-    console.log("VARIABLES COPIA");
-    console.log(JSON.stringify(variablesCopia, null, 4));
-  });
+  // fs.readFile("./copia.txt", (err, data) => {
+  //   if (err) throw err;
+  //   let hola2 = parser.parse(data.toString()).AST;
+  //   llenarEstructura(hola, "original");
+  //   llenarEstructura(hola2, "copia");
+  //   compararArchivos();
+  //   console.log("CLASES COPIA");
+  //   console.log(JSON.stringify(clasesCopia, null, 4));
+  //   console.log("METODOS COPIA");
+  //   console.log(JSON.stringify(metodosCopia, null, 4));
+  //   console.log("VARIABLES COPIA");
+  //   console.log(JSON.stringify(variablesCopia, null, 4));
+  // });
   // llenarEstructura(hola, "original");
   // console.log( hola ); //PARA VER BIEN LA ESTRUCTURA
   //console.log( JSON.stringify(hola, null, 4)  );

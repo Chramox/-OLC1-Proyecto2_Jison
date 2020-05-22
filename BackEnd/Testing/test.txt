@@ -9,10 +9,16 @@ class Principal{
 }
 class Secundaria{
     double hola = 3;
-    
+    hola
     int original(int a, int b, String c){
         char var = 5;
         System.out.print("METODO COPIA");
         return 5;
+    }
+    switch(ebtrada){
+        case 1:break;
     }  
+}
+class tercera{
+    double estaAndaPiola;
 }
