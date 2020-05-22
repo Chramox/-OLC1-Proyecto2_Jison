@@ -15,12 +15,30 @@ function nuevaOperacion(operandoIzq, operandoDer, Tipo) {
 	};
 }
 
-
+//lista de errores lexicos y sintacticos
+let ListaErrores = new Array();
 /**
  * El objetivo de esta API es proveer las funciones necesarias para la construcción de operaciones e instrucciones.
  */
 const instruccionesAPI = {
 	
+	errorLexico:function(error,linea, columna){
+		return{
+			TIPO_ERROR: "LEXICO",
+			Error: error,
+			Linea: linea,
+			Columna: columna
+		};
+	},
+	errorSintactico: function(error, esperado, linea, columna){
+		return{
+			TIPO_ERROR: "SINTACTICO",
+			Error: error,
+			Esperado: esperado,
+			Linea: linea,
+			Columna: columna
+		};
+	},
 	OperacionBinaria: function(left, right, op){
 		return{
 			IZQ: left,
@@ -196,8 +214,16 @@ const instruccionesAPI = {
 			TIPO_DATO: tipo,
 			ID: id
 		};
+	},
+	clearListaErrores: function(){
+		ListaErrores = new Array();
+	},
+	pushError: function(info){
+		ListaErrores.push(info);
+	},
+	getListaErrores:function(){
+		return ListaErrores;
 	}
-
 }
 // Exportamos nuestras constantes y nuestra API
 

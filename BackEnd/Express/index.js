@@ -1,12 +1,15 @@
 const express = require("express");
 const app = express();
-var parser = require("../Gramatica/gramatica");
+const parser = require("../Gramatica/gramatica");
+const instruccionesAPI = require("../Gramatica/instrucciones").instruccionesAPI;
 
 const getAST = {
     returnAST: function (input){
         let AST;
         try {
             AST =  parser.parse(input.toString());
+            instruccionesAPI.setListaErrores();
+            return AST;
         } catch (error) {
             console.error(error);
             return;
@@ -26,12 +29,13 @@ app.post('/parser', (req, res) => {
 
     const texto = req.body.text;
     const arbolAST =  getAST.returnAST(texto);
-
-    res.send({ Salida: "SE COMPILO CORRECTAMENTE", AST: arbolAST });
+    const jsonAST = JSON.stringify(arbolAST.AST, null,4);
+    const errores;
+    res.send({ Salida: "SE COMPILO CORRECTAMENTE", AST: jsonAST , ListaErrores: errores});
 });
 
-app.listen(3000, () => {
- console.log("El servidor está inicializado en el puerto 3000");
+app.listen(4200, () => {
+ console.log("El servidor está inicializado en el puerto 4200");
 });
 
 
