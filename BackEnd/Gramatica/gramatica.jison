@@ -107,9 +107,24 @@
 %% /* Definición de la gramática */
 /**/
 ini
-    : Imports ClassINIT  EOF{  return instruccionesAPI.instructionsINIT($1,$2) }
-    | ClassINIT EOF{ return instruccionesAPI.instructionsINIT(undefined,$1) }
-    | error EOF { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    : Imports ClassINIT  EOF
+        {  return {
+            AST: instruccionesAPI.instructionsINIT($1,$2), 
+            ListaErrores: instruccionesAPI.getListaErrores()};}
+    | ClassINIT EOF
+        { return {
+            AST: instruccionesAPI.instructionsINIT(undefined,$1),
+            ListaErrores: instruccionesAPI.getListaErrores()
+        };}
+    | error EOF 
+        { 
+            console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+            instruccionesAPI.pushError(instruccionesAPI.errorSintactico(yytext,yy.parser.hash.expected,this._$.first_line, this._$.first_column)); 
+            return {
+                AST: instruccionesAPI.instructionsINIT($1,$2),
+                ListaErrores: instruccionesAPI.getListaErrores()
+            };
+        }
 ;
 /*
 ClassINIT

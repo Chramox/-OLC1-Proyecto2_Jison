@@ -46,10 +46,10 @@ let variablesCopia = [],
 
 fs.readFile("./test.txt", (err, data) => {
   if (err) throw err;
-  let hola = parser.parse(data.toString());
+  let hola = parser.parse(data.toString()).AST;
   fs.readFile("./copia.txt", (err, data) => {
     if (err) throw err;
-    let hola2 = parser.parse(data.toString());
+    let hola2 = parser.parse(data.toString()).AST;
     llenarEstructura(hola, "original");
     llenarEstructura(hola2, "copia");
     compararArchivos();

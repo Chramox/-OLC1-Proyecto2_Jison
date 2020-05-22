@@ -57,12 +57,6 @@ function guardarArchivoB(){
     download(nombreArchivo, informacion);
 }
 
-
-
-
-
-
-
 function download(filename, text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -75,12 +69,50 @@ function download(filename, text) {
   
     document.body.removeChild(element);
   }
+/**
+ * ANALISIS DE LOS ARCHIVOS PARA ENCONTRAR COPIAS
+ */
+function arbolAST(json)
+{
+  document.getElementById("arbol_AST").innerHTML = "";
+  document.getElementById("arbol_AST").appendChild(renderjson(json));
+}
+//PETICION AL SERVIDOR ARBOL ARCHIVO PRINCIPAL
+function arbol_A(){
+  var editor = ace.edit("editor_secundario");
+  let textA = editor.getValue();
+  let ast = getAST_ArchivoA(textA);
+  console.log(ast);
+  arbolAST(ast);
+}
+
+
+
+async function getAST_ArchivoA(txt) {
+  url = "http://localhost:4200/parser";
+  const data = { text: txt };
+  const ast = await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .catch((error) => console.error("Error:", error))
+    .then((response) => {
+      console.log("Success:", response.message);
+      return response.AST;
+    });
+  return ast;
+}
+
+//PETICION AL SERVIDOR ARBOL ARCHIVO SECUNDARIO
 
 
 
 
-
-function generarReporteErrores(listaToken, listaSintactico) {
+  function generarReporteErrores(listaToken, listaSintactico) {
   let titulo;
   //INICIO
   let contador = 0;
@@ -170,26 +202,6 @@ function generarReporteErrores(listaToken, listaSintactico) {
   //CERRAR HTML
   html += "</tbody> \n </table></div> \n </center> \n </body> \n </html> \n";
   download("ReporteErrores.html", html);
-}
-//COMUNICACION CON LA GRAMATICA PARA QUE DEVUELVA EL AST
-//TODO: CONFIGURAR BIEN LA PINCHE COMUNICACION
-async function enviarData(txt) {
-  url = "http://localhost:3000/parser";
-  const data = { text: txt };
-  const ast = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((res) => res.json())
-    .catch((error) => console.error("Error:", error))
-    .then((response) => {
-      console.log("Success:", response.message);
-      return response.AST;
-    });
-  return ast;
 }
 
 

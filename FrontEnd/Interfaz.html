@@ -48,7 +48,7 @@
                       </a>
                           <a class="dropdown-item" (click)="guardarArchivoPrincipal()">Guardar</a>
                           <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="#">Nuevo</a>
+                          <a class="dropdown-item" (click)="arbol_A()">Arbol Sintactico</a>
                         </div>
                       </li>
                       <li class="nav-item dropdown show">
@@ -148,6 +148,11 @@
     </div>
   </div>
 </div>
+<!-- MOSTRAR AST -->
+<h4>Arbol Sintactico</h4>
+<div style="padding-left: 30px; padding-right: 30px;">
+<div id="arbol_AST"></div>
+</div>
 
 <!-- MODAL -->
 <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -190,5 +195,6 @@
       
   </script>
     <script src="js/funcionamiento.js"></script>
+    <script src="https://cdn.rawgit.com/caldwell/renderjson/master/renderjson.js"></script>
 </body>
 </html>

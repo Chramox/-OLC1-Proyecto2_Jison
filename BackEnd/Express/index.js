@@ -28,10 +28,11 @@ app.get('/send', (req, res) => {
 app.post('/parser', (req, res) => {
 
     const texto = req.body.text;
-    const arbolAST =  getAST.returnAST(texto);
-    const jsonAST = JSON.stringify(arbolAST.AST, null,4);
-    const errores;
-    res.send({ Salida: "SE COMPILO CORRECTAMENTE", AST: jsonAST , ListaErrores: errores});
+    const retornos =  getAST.returnAST(texto);
+    const jsonAST = JSON.stringify(retornos.AST, null,4);
+    const errores = JSON.stringify(retornos.ListaErrores, null, 4);
+    res.send({ Salida: "SE COMPILO CORRECTAMENTE", AST: jsonAST , ListaErrores: errores});  
+    
 });
 
 app.listen(4200, () => {
