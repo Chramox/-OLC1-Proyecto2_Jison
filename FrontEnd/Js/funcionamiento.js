@@ -483,7 +483,8 @@ function compararVariables(metodoOriginal, metodoCopia) {
     metodoOriginal.Variables.some((varOriginal) => {
       if (variable.tipoDato == varOriginal.tipoDato) {
         //son iguales
-        variablesCopia.push(variable);
+        if(!variablesCopia.includes(variable))
+          variablesCopia.push(variable);
         return true;
       }
     });
