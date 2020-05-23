@@ -466,7 +466,8 @@ function compararMetodo(metodoOriginal, metodoCopia) {
         }
       }
       //si se considera copia los metodos ----> revisar sus variables
-      metodosCopia.push(metodoCopia);
+      if(!metodosCopia.includes(metodosCopia))
+        metodosCopia.push(metodoCopia);
       compararVariables(metodoOriginal, metodoCopia);
       return true; //todo es iguAL
     } else {
