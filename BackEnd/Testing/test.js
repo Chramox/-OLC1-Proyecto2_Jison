@@ -47,7 +47,7 @@ let variablesCopia = [],
 fs.readFile("./test.txt", (err, data) => {
   if (err) throw err;
   let hola = parser.parse(data.toString()).AST;
-  ///console.log( JSON.stringify(hola, null, 4)  );
+  console.log( JSON.stringify(hola, null, 4)  );
   // fs.readFile("./copia.txt", (err, data) => {
   //   if (err) throw err;
   //   let hola2 = parser.parse(data.toString()).AST;
@@ -104,7 +104,7 @@ function llenarEstructura(arbolAST, archivo) {
           if (declaracion != null) {
             //REVISANDO SI ES UNA LISTA DE VARIABLES O UNA SOLA
             let listadoDeclaraciones = declaracion["ListaDeclaraciones"];
-            let tipoDato = declaracion["TIPO_DATO"];
+            let tipoDato = declaracion["TIPO"];
             listadoDeclaraciones.forEach((decl) => {
               //AQUI YA TODAS SON VARIABLES
               let variable = new Variable(
@@ -218,7 +218,6 @@ function compararMetodo(metodoOriginal, metodoCopia) {
 }
 function compararVariables(metodoOriginal, metodoCopia) {
   //solo comparar tipo de datos, porque supuestamente ya pertenecen al mismo metoodo
-
   metodoCopia.Variables.forEach((variable) => {
     metodoOriginal.Variables.some((varOriginal) => {
       if (variable.tipoDato == varOriginal.tipoDato) {

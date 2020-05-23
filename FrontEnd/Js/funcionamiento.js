@@ -72,17 +72,29 @@ subirArchivoCopia.addEventListener("change", onFileSelectCopia, false);
 
 function guardarArchivoPrincipal() {
   let nombreArchivo;
+  var editor = ace.edit("editor");
+  let textA = editor.getValue();  
+  // console.log('imipirkaldsklasdfj dsalkfsdajlk;');
+  // console.log(textA);
   if (nombreArchivoPrincipal === "") {
     nombreArchivo = "editor_principal.java";
   } else {
     nombreArchivo = nombreArchivoPrincipal;
   }
-  var editor = ace.edit("editor_secundario");
-  let informacion = editor.getValue();
-
-  download(nombreArchivo, informacion);
+  download(nombreArchivo, textA);
 }
-
+function guardarLexicos() {
+  let nombreArchivo = "Reporte_ErroresLexicos";
+  var editor = ace.edit("editor_lexicos");
+  let textA = editor.getValue();  
+  download(nombreArchivo, textA);
+}
+function guardarSintacticos() {
+  let nombreArchivo = "Reporte_ErroresSintacticos";
+  var editor = ace.edit("editor_sintacticos");
+  let textA = editor.getValue();  
+  download(nombreArchivo, textA);
+}
 //GUARDAR ARCHIVO COPIA
 function guardarArchivoB() {
   let nombreArchivo = document.getElementById("nombre").value + ".java";
@@ -116,6 +128,26 @@ function arbolAST(json) {
   document.getElementById("arbol_AST").innerHTML = "";
   document.getElementById("arbol_AST").appendChild(renderjson(json));
 }
+function setErrores(errores) {
+  var editor_lexicos = ace.edit("editor_lexicos");
+  var editor_sintacticos = ace.edit("editor_sintacticos");
+  let strLex = "ERRORES LEXICOS\n";
+  let strSin = "ERRORES SINTACTICOS\n";
+  if (errores != null) {
+    errores.forEach((error) => {
+      //ERRORES LEXICOS
+      console.log(error);
+      if (error["TIPO_ERROR"] == "LEXICO") {
+        strLex += 'Este es un error léxico: ' + error["Error"] + ', en la linea: ' + error["Linea"] + ', en la columna: ' + error["Columna"] + '\n' ;
+      }
+      else if (error["TIPO_ERROR"] == "SINTACTICO"){
+        strSin += error["Error"] + '\n';
+      }
+    });
+  }
+    editor_lexicos.setValue(strLex);
+    editor_sintacticos.setValue(strSin);
+}
 //PETICION AL SERVIDOR ARBOL ARCHIVO PRINCIPAL
 async function arbol_A() {
   var editor = ace.edit("editor");
@@ -125,6 +157,7 @@ async function arbol_A() {
     const ast = await getArbol_Errores(textA);
     arbolAST(ast.AST);
     console.log(ast.ListaErrores);
+    setErrores(ast.ListaErrores);
   }
 }
 //PETICION AL SERVIDOR ARBOL ARCHIVO SECUNDARIO
@@ -136,6 +169,8 @@ async function arbol_B() {
     const ast = await getArbol_Errores(text);
     arbolAST(ast.AST);
     console.log(ast.ListaErrores);
+    setErrores(ast.ListaErrores);
+
   }
 }
 
@@ -291,13 +326,13 @@ function llenarEstructura(arbolAST, archivo) {
   let listaMetodos = [];
   let listaVariables = [];
 
-  if (listado!=null) {
+  if (listado != null) {
     listado.forEach((clase) => {
       listaMetodos = [];
       listaVariables = [];
       let listaInstr = clase["INST"];
       let nombreClase = clase["IDENTIFICADOR"];
-  
+
       if (listaInstr != null) {
         listaInstr.forEach((inst) => {
           // console.log("INSTRUCCION");
@@ -317,10 +352,10 @@ function llenarEstructura(arbolAST, archivo) {
                 listaParametros.push(newParam);
               });
             }
-  
+
             //VARIABLES QUE SE PUEDEN CONSIDERAR COPIA
             let list_inst = inst["INSTRUCCIONES"];
-  
+
             if (list_inst != null) {
               list_inst.forEach((instruccion) => {
                 let declaracion = instruccion["Declaracion"];

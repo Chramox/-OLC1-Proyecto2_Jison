@@ -1,149 +1,115 @@
-/****************************************************************************************
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-$Esto es un comentario multilinea y puede venir en cualquier parte del archivo de entrada$
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-*****************************************************************************************/
+/*
 
-import ClaseA;
-import ClaseB; 
+        SECCION DE LOS IMPORT
 
-class prueba_entrada1 {
+ */
+
+import Sistema;          // Sistema juasjuas
+import Node;            // Nodo de una estructura de datos
+import JTable;          // Tabla para mostrar datos
+import Bichulga;        // Grupo con funciones del grupo
 
 
-    int metodo_1(int a,int b,int c,String d, double Double,int INT){
-        if(a + b + c / Double * INT){
-            return 0;
-        }else{
-            return 1;
-        }
-    }
+class Principal{
 
+    int a = 12;
+    boolean aver = false;
+    String cadenaTextoPrincipal = "Los del grupo de Bichulga se copian todos los trabajos de compi" + a * bv;    
 
-    String metodo_2(boolean falso){
-        if(falso){
-            return "Entro falco como verdadero";
-        }else if(!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!!!!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!!!!!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!!!!!!!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!!!!!!!!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!!!!!!!!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!!!!!!!!!!!!!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!!!!!!!!!!falso){
-            return "Entro falco como verdadero";
-        }else if(!!!!!!!!!!!!falso){
-            return "Entro falco como verdadero";
-        }
-    }
+    void menuAnidado(){
+        System.out.println(imprimeEsto("MENU PRINCIPAL DE LA APLICACION"));
+        System.out.println(imprimeEsto("1. Operaciones Bichulga"));
+        System.out.println(imprimeEsto("2. Operaciones Aritmeticas"));
+        System.out.println(imprimeEsto("3. Visualizar nodo"));
+        System.out.println(imprimeEsto("4. Ordenamientos"));
 
+        String leerTecla = leerTecla();
+        switch (leerTecla) {
+            case "1":
+                System.out.println(imprimeEsto("Operaciones Bichulga"));
+                System.out.println(imprimeEsto("1. Sacar a Alejandro Sosa"));
+                System.out.println(imprimeEsto("2. Jugar Minecraft"));
+                System.out.println(imprimeEsto("3. Paja grupal en 5 minutos"));
+                System.out.println(imprimeEsto("4. Salir"));
+                String leerTecla = leerTecla();
 
-    double relacionales(/*Comentario multilinea no afecta la ejecucion*/){
-        while(true){
-            while(1){
-                int x = 0;
-                do{
-                    System.out.println("0777-Compiladores 1"); 
-                    if(x >= 20){
-                        break;
-                    }
-                }while(x>50000);
-
-                if((1>2) == (3<5)){
-                    System.out.println("Es incorrecto");
-                }else if((1-2+4-3+5*(7/6+4-6))>(1-2+4-3*(67))){
-                    System.out.println("Sera incorrecto?");
+                if(leerTecla == "1" && leerTecla != (1 + 21 * 3111) || 1 <= 2){
+                    CallCisco();
+                }else if(leerTecla == "2" && leerTecla != (1 + 21 * 3111) || 1 <= 4){
+                    
+                }else if(leerTecla == "3" && leerTecla != ("dnicsa" + 21 * dsa) || 1 <= 1){
+                    System.out.println("Atentos que toca la paja grupal en 5 minutos... Corran para llegar a tiempo");
+                    PajaGrupal();
+                }else if(leerTecla == "4" && leerTecla != (1 + 21 * 3111) || 1 <= 2){
+                    System.out.println("Salir del sistema Bichulga...");
+                    menuAnidado();
+                }
+                else if(!b)
+                {
+                    
+                    
                 }else{
-                     System.out.println("Entro al else");
+
                 }
 
-
                 break;
-            }
-        }
-
-        return "String no es un double";
-    }
-
-
-    double logicas(boolean a, boolean b, boolean c){
-        for(int x=-1;x<100;x++){
-            for(int y=2;x*y<30;y++){
-                int xyz=5;
-                double Double = 0.00000000010293856378019283645329201;
-                String string = "string";
-                char CHAR_1 = ' ';
-            }
+            case 1+1:
+                break;
+            case "3":
+                break;
+            case 4:
+                break;
+            default:
+                System.out.println("Teclee una opcion correcta prro");
+                menuAnidado();
+                break;
         }
     }
 
+    String int imprimeEsto(String cadena){
+        return cadena;
+    }
 
-    void main(){
-        double logicas = logicas(true,1==1,!!!!!!!!!(true && true)||(!true && !!!!!!false) && false);
-        double rel = relacionales();
-        String response = metodo_2(!false && true || !true);
-        int a = 67;
-        int v = 12;
-        int z = 0;
-        int b = -123456;
-
-        String parametro = "Este texto se envio como parametro";
-
-        int __________ultimo_parametro = 10;
-
-        int entero = metodo_1(4*a-v+z,b,a-23,parametro,-0.09,__________ultimo_parametro);
+    char leerTecla(){
+        LeerSistema();
     }
 }
 
-
-class prueba_2{
-
-    int switch(){
-        int a,b,c,d,g,j,l = 8;
-        double cdf,var1,var2,var3 = 0.0;
-        String str1,str2,str3 = "cadena de str;";
-        String micadena = "Concatenacion de cadenas: " + str1 + str2 + str3;
-
-        switch (3*54) {      
-            case 3: 
-                System.out.print(micadena);          
-                break;      
-            case 5:     
-                System.out.print(micadena);
-            case 7:       
-                System.out.print(micadena);
-                break;      
-            default:   
-                System.out.print(micadena);      
-                break; 
-        } 
-
+class Aritmetica{
+    int suma(double a, int b){
+        return a + b;
     }
 
-    double potencia(double n1, double n2){
-        double resultado = n1^ n2;
-        return resultado;  
-    } 
-
-    void main(){
-        potencia(0.1,5);
+    double resta(int a, boolean b){
+        return a - b;
     }
-}
 
-class recuperacion{
+    double multi(int a, int b){
+        return a * b;
+    }
+
+    double div(int a, int b){
+        return a / b;
+    }
+
+    int potencia(int a, String b){
+        return a ^ b;
+    }
+
+    String modulo(int a, int b){
+        return a % b;
+    }
+
     void main(){
-        int a;
+        // Prueba gg
+        suma(1 + 212, "Holdsa", 21, a);
+        resta(1 + 212, "Holdsa", a);
+        multi(2, 21);
+        div(1 + 212, "Holdsa", 21, db);
+        potencia(1 + 212, "Holdsa", 21, Node);
+        modulo(1 + 212, "Holdsa", 21, a);
+
+        System.out.println("Los resultados de las pruebas aritmeticas no sirven acá");
+        System.out.print("A no ser...");
     }
 }

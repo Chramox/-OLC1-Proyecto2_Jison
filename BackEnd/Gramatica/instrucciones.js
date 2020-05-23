@@ -30,14 +30,17 @@ const instruccionesAPI = {
 			Columna: columna
 		};
 	},
-	errorSintactico: function(error, esperado, linea, columna){
+	errorSintactico: function(error){
+		console.log("ERROR SINTACTICO");
 		return{
 			TIPO_ERROR: "SINTACTICO",
-			Error: error,
-			Esperado: esperado,
-			Linea: linea,
-			Columna: columna
+			Error: error
 		};
+	},
+	erroresSintacticos: function(lista){
+		lista.forEach(element => {
+			ListaErrores.push(element);
+		});
 	},
 	OperacionBinaria: function(left, right, op){
 		return{

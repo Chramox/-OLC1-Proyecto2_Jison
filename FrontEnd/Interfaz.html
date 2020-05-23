@@ -54,7 +54,7 @@
                              <input id="subirArchivo" type="file" style="visibility: hidden;"/>
                        </label>
                       </a>
-                          <a class="dropdown-item" (click)="guardarArchivoPrincipal()">Guardar</a>
+                          <a class="dropdown-item" onclick="guardarArchivoPrincipal()">Guardar</a>
                           <div class="dropdown-divider"></div>
                           <a class="dropdown-item" onclick="arbol_A()">Arbol Sintactico</a>
                         </div>
@@ -62,10 +62,8 @@
                       <li class="nav-item dropdown show">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Reportes</a>
                         <div class="dropdown-menu" >
-                            <a class="dropdown-item" href="#">Reporte Errores Lexicos</a>
-                            <a class="dropdown-item" href="#">Reporte de Errrores Sintacticos</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">AST y Errores</a>
+                            <a class="dropdown-item" onclick="guardarLexicos()">Reporte Errores Lexicos</a>
+                            <a class="dropdown-item" onclick="guardarSintacticos()">Reporte de Errrores Sintacticos</a>
                         </div>
                       </li>
                   <li class="nav-item">

@@ -51,8 +51,7 @@ app.post('/parser', (req, res) => {
     const texto = req.body.text;
     console.log("texto: " + texto);
     const retornos =  getAST.returnAST(texto);
-    const errores = JSON.stringify(retornos.ListaErrores, null, 2);
-    res.send({ Salida: "SE COMPILO CORRECTAMENTE", AST: retornos.AST , ListaErrores: errores});  
+    res.send({ Salida: "SE COMPILO CORRECTAMENTE", AST: retornos.AST , ListaErrores: retornos.ListaErrores});  
     
 });
 

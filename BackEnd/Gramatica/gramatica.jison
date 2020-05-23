@@ -89,6 +89,7 @@
 
 %{
 	const instruccionesAPI	= require('./instrucciones').instruccionesAPI;
+    let errorSintactico = "";
 %}
 /* Asociación de operadores y precedencia */
 %left 'AND' 'OR'
@@ -322,5 +323,7 @@ Return
 ;
 Error
     : error 
-     { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+        {   errorSintactico = 'Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column; 
+            instruccionesAPI.pushError(instruccionesAPI.errorSintactico(errorSintactico)); 
+            console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
